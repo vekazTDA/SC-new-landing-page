@@ -62,11 +62,11 @@ export default function CtaBannerSection() {
     // deliberately no overflow-hidden — the blur has to bleed past the card edges
     <section
       ref={sectionRef}
-      className="relative isolate bg-[#EFE9E0] px-4 py-10 sm:px-8 sm:py-14 lg:px-12 lg:py-16 2xl:px-14"
+      className="relative isolate flex min-h-svh flex-col justify-center bg-[#EFE9E0] px-4 py-[min(2.5rem,4svh)] sm:px-8 lg:px-12 lg:py-[min(4rem,6svh)] 2xl:px-14"
     >
       <div
         ref={cardRef}
-        className="relative mx-auto grid max-w-[1636px] items-center gap-8 overflow-hidden rounded-[18px] bg-[#EA9E39] px-6 py-10 will-change-[filter,transform,opacity] sm:px-10 sm:py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-6 lg:px-14 lg:py-16 2xl:px-[106px] 2xl:py-20"
+        className="relative mx-auto grid max-w-[1636px] items-center gap-8 overflow-hidden rounded-[18px] bg-[#EA9E39] px-6 py-[min(2.5rem,5svh)] will-change-[filter,transform,opacity] sm:px-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-6 lg:px-14 lg:py-[min(4rem,7svh)] 2xl:px-[106px]"
       >
         <div>
           <h2

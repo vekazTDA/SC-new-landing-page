@@ -9,7 +9,7 @@ export default function ProductsSection() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   return (
-    <section className="relative isolate overflow-hidden bg-[#AC9D93]">
+    <section className="relative isolate flex min-h-svh flex-col justify-center overflow-hidden bg-[#AC9D93]">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-60 [background:radial-gradient(60%_50%_at_50%_30%,#E3DDD9_0%,transparent_70%)]"
@@ -55,7 +55,7 @@ export default function ProductsSection() {
           </div>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3 xl:gap-8">
+        <div className="mt-8 grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3 xl:gap-8">
           {PRODUCTS.map((product) => (
             <ProductCard
               key={product.slug}

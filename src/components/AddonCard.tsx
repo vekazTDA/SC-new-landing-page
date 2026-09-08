@@ -13,7 +13,7 @@ export default function AddonCard({
 }) {
   return (
     <div className="group flex w-full flex-col overflow-hidden rounded-[20px] border border-[#C5A880]/40 bg-[#221712] shadow-[0px_16px_32px_0px_rgba(0,0,0,0.38)]">
-      <div className="relative h-[220px] w-full sm:h-[280px]">
+      <div className="relative h-[min(170px,20svh)] w-full sm:h-[min(190px,21svh)]">
         <Image
           src={addon.image}
           alt={addon.title}
@@ -30,7 +30,7 @@ export default function AddonCard({
         )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-4 p-5 sm:p-6">
+      <div className="flex flex-1 flex-col gap-[min(0.75rem,1.6svh)] p-[min(1rem,2.2svh)] sm:p-[min(1.25rem,2.4svh)]">
         <div className="flex items-start justify-between gap-2">
           <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-[#EFE9E0] sm:text-base">
             {addon.title}
@@ -48,7 +48,7 @@ export default function AddonCard({
           type="button"
           onClick={() => onToggle(addon.slug)}
           className={
-            "mt-auto flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] transition-colors " +
+            "mt-auto flex items-center justify-center gap-2 rounded-lg border px-4 py-[min(0.625rem,1.3svh)] text-xs font-semibold uppercase tracking-[0.08em] transition-colors " +
             (selected
               ? "border-[#C5A880] bg-[#2E211A] text-[#C5A880] hover:bg-[#3A2A20]"
               : "border-[#7E7469] bg-transparent text-[#EFE9E0] hover:border-[#C5A880] hover:text-[#C5A880]")

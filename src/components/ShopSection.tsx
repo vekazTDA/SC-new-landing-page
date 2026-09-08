@@ -9,7 +9,7 @@ export default function ShopSection() {
   const [selectedProduct, setSelectedProduct] = useState<ShopProduct | null>(null);
 
   return (
-    <section className="relative isolate overflow-hidden bg-[#241109]">
+    <section className="relative isolate flex min-h-svh flex-col justify-center overflow-hidden bg-[#241109]">
 
       <div className="relative mx-auto max-w-[1728px] px-6 pb-16 pt-14 sm:px-10 sm:pb-20 sm:pt-16 lg:px-12 lg:pb-24 lg:pt-20 2xl:px-14">
         <h2

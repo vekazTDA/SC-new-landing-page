@@ -13,7 +13,7 @@ export default function ProductCard({
       type="button"
       onClick={() => onSelect(product)}
       aria-label={`View details for ${product.name}`}
-      className="group flex flex-col rounded-2xl bg-[#F0E7DE]/80 p-4 text-left transition-transform hover:-translate-y-1 sm:p-5 lg:p-6"
+      className="group flex w-full max-w-[400px] flex-col rounded-2xl bg-[#F0E7DE]/80 p-4 text-left transition-transform hover:-translate-y-1 sm:p-5 lg:p-6"
     >
       <h3 className="text-center text-base font-semibold uppercase leading-snug tracking-[0.25em] text-[#76655A] sm:text-lg lg:text-xl">
         {product.name}

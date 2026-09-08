@@ -2,13 +2,14 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="relative isolate overflow-hidden bg-[linear-gradient(91deg,#867971_29%,#6F625A_98%)]"
+      className="relative isolate flex min-h-svh flex-col overflow-hidden bg-[linear-gradient(91deg,#867971_29%,#6F625A_98%)]"
     >
       {/* reserves the space the fixed site header floats over (measured at runtime,
           with a per-breakpoint fallback for the first paint) */}
-      <div className="h-[var(--header-height,84px)] sm:h-[var(--header-height,72px)] lg:h-[var(--header-height,84px)] 2xl:h-[var(--header-height,108px)]" />
+      <div className="h-[var(--header-height,84px)] shrink-0 sm:h-[var(--header-height,72px)] lg:h-[var(--header-height,84px)] 2xl:h-[var(--header-height,108px)]" />
 
-      <div className="relative flex min-h-[380px] flex-col justify-between sm:min-h-[480px] lg:min-h-[max(460px,58vh)] 2xl:min-h-[max(600px,64vh)]">
+      {/* fills whatever is left of the screen, so nothing below can peek in */}
+      <div className="relative flex min-h-[380px] flex-1 flex-col justify-between">
         <video
           className="absolute inset-0 h-full w-full object-cover"
           poster="/images/hero-box.png"

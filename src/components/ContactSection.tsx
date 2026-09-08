@@ -67,10 +67,10 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative isolate scroll-mt-[var(--header-height,84px)] overflow-hidden bg-[#F2EDE5]"
+      className="relative isolate flex min-h-svh scroll-mt-[var(--header-height,84px)] flex-col justify-center overflow-hidden bg-[#F2EDE5]"
     >
 
-      <div className="relative mx-auto grid max-w-[1728px] gap-10 px-6 pb-16 pt-14 sm:px-10 sm:pb-20 sm:pt-16 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:items-start lg:gap-16 lg:px-12 lg:pb-24 lg:pt-20 2xl:px-14">
+      <div className="relative mx-auto grid max-w-[1728px] gap-10 px-6 pb-[min(2.5rem,4svh)] pt-[min(2.5rem,4svh)] sm:px-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:items-start lg:gap-12 lg:px-12 lg:pb-14 lg:pt-14 2xl:px-14">
         <div className="max-w-xl">
           <h2
             className="text-3xl leading-[1.35] text-[#281006] sm:text-4xl 2xl:text-[2.5rem]"
@@ -96,10 +96,10 @@ export default function ContactSection() {
 
           <form
             ref={formRef}
-            className="relative rounded-2xl bg-[#A06B4A] px-6 py-10 will-change-[filter,transform,opacity] sm:px-10 sm:py-12 lg:px-14"
+            className="relative rounded-2xl bg-[#A06B4A] px-6 py-[min(2rem,3.5svh)] will-change-[filter,transform,opacity] sm:px-10 sm:py-9 lg:px-14"
             onSubmit={(event) => event.preventDefault()}
           >
-          <div className="flex flex-col gap-8 sm:gap-10">
+          <div className="flex flex-col gap-[min(1.5rem,2.6svh)]">
             <div>
               <label htmlFor={`${formId}-name`} className="sr-only">
                 Full name
@@ -113,7 +113,7 @@ export default function ContactSection() {
               />
             </div>
 
-            <div className="grid gap-8 sm:grid-cols-2 sm:gap-6">
+            <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
               <div>
                 <label htmlFor={`${formId}-email`} className="sr-only">
                   Email
@@ -142,7 +142,7 @@ export default function ContactSection() {
               </div>
             </div>
 
-            <div className="grid gap-8 sm:grid-cols-2 sm:gap-6">
+            <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
               <div>
                 <label htmlFor={`${formId}-company`} className="sr-only">
                   Company name
@@ -191,7 +191,7 @@ export default function ContactSection() {
               />
             </div>
 
-            <div className="grid gap-8 sm:grid-cols-2 sm:gap-6">
+            <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
               <div>
                 <label htmlFor={`${formId}-quantity`} className="sr-only">
                   Estimated quantity
@@ -239,7 +239,7 @@ export default function ContactSection() {
             </div>
           </div>
 
-          <div className="mt-12 flex flex-col items-center gap-5">
+          <div className="mt-[min(2rem,3svh)] flex flex-col items-center gap-3">
             <button
               type="submit"
               className="rounded-full bg-[#281006] px-10 py-3 font-[family-name:var(--font-ui)] text-sm font-semibold text-white transition-opacity hover:opacity-90"

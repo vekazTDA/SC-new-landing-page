@@ -25,11 +25,11 @@ export default function AddonsSection() {
   const total = selectedAddons.reduce((sum, addon) => sum + addon.price, 0);
 
   return (
-    <section className="relative isolate overflow-hidden bg-[#A5968C]">
+    <section className="relative isolate flex min-h-svh flex-col justify-center overflow-hidden bg-[#A5968C]">
 
-      <div className="relative mx-auto max-w-[1728px] px-6 pb-16 pt-14 sm:px-10 sm:pb-20 sm:pt-16 lg:px-12 lg:pb-24 lg:pt-20 2xl:px-14">
+      <div className="relative mx-auto max-w-[1728px] px-6 pb-[min(2.5rem,4svh)] pt-[min(2.5rem,4svh)] sm:px-10 lg:px-12 lg:pb-[min(3rem,5svh)] lg:pt-[min(3rem,5svh)] 2xl:px-14">
         <h2
-          className="text-3xl leading-[1.3] text-black sm:text-4xl lg:text-4xl 2xl:text-5xl"
+          className="text-3xl leading-[1.2] text-black [@media(max-height:720px)]:text-2xl sm:text-4xl lg:text-4xl 2xl:text-5xl"
           style={{ fontFamily: "var(--font-serif-display)" }}
         >
           Add-ons:
@@ -37,7 +37,7 @@ export default function AddonsSection() {
           <em className="italic">The Finishing Touch</em>
         </h2>
 
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4 lg:mt-10">
+        <div className="mt-[min(1.5rem,3svh)] grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4 lg:mt-8">
           {ADDONS.map((addon) => (
             <AddonCard
               key={addon.slug}
@@ -48,7 +48,7 @@ export default function AddonsSection() {
           ))}
         </div>
 
-        <div className="mt-8 flex flex-col gap-6 rounded-2xl border border-[#33231B] bg-[#2E211A] p-6 shadow-[0px_24px_48px_0px_rgba(0,0,0,0.5)] sm:flex-row sm:items-center sm:justify-between lg:mt-10">
+        <div className="mt-[min(1.25rem,2.5svh)] flex flex-col gap-4 rounded-2xl border border-[#33231B] bg-[#2E211A] p-[min(1.25rem,2.4svh)] shadow-[0px_24px_48px_0px_rgba(0,0,0,0.5)] sm:flex-row sm:items-center sm:justify-between lg:mt-8">
           <div>
             <button
               type="button"

@@ -19,7 +19,7 @@ const SOCIAL_LINKS = [
 export default function SiteFooter() {
   return (
     // No glow of its own — the soft amber above is the CTA card defocusing as this arrives.
-    <footer className="relative isolate bg-[#EFE9E0] px-4 pb-8 pt-24 sm:px-8 sm:pt-32 lg:px-12 lg:pt-40 2xl:px-14">
+    <footer className="relative isolate flex min-h-svh flex-col justify-center bg-[#EFE9E0] px-4 pb-8 pt-24 sm:px-8 sm:pt-32 lg:px-12 lg:pt-40 2xl:px-14">
       <div className="relative mx-auto max-w-[1641px] rounded-xl bg-[#9C6543] px-6 py-10 sm:px-10 sm:py-12 lg:px-11 lg:py-14">
         <div className="flex flex-col gap-12 lg:flex-row lg:justify-between lg:gap-10">
           <div className="max-w-md">
