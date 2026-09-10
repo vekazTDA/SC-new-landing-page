@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ArrowRight, Minus, Plus, Star, X } from "lucide-react";
 import type { Product } from "@/data/products";
+import { saveInquiryPrefill } from "@/lib/inquiry";
 
 export default function ProductDetailModal({
   product,
@@ -13,7 +14,14 @@ export default function ProductDetailModal({
   onClose: () => void;
 }) {
   const [activeImage, setActiveImage] = useState(0);
-  const [quantity, setQuantity] = useState(product?.defaultQuantity ?? 1);
+  const [quantityInput, setQuantityInput] = useState(
+    String(product?.defaultQuantity ?? 1)
+  );
+
+  const quantity = Math.max(1, Number.parseInt(quantityInput, 10) || 1);
+
+  // No effect resets these on open: ProductsSection keys this component by product
+  // slug, so a new selection remounts it and the initialisers above run fresh.
 
   useEffect(() => {
     if (!product) return;
@@ -30,23 +38,28 @@ export default function ProductDetailModal({
 
   if (!product) return null;
 
+  const setQuantity = (next: number) => {
+    setQuantityInput(String(Math.max(1, next)));
+  };
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#1B120B]/80 p-4 sm:p-8 lg:p-20"
+      className="fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-[#1B120B]/80"
       onClick={onClose}
     >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="product-modal-title"
-        onClick={(event) => event.stopPropagation()}
-        className="relative flex w-full max-w-[1080px] flex-col gap-8 overflow-y-auto rounded-3xl border border-white/25 bg-[#F9F6F0]/90 p-6 shadow-2xl backdrop-blur-xl max-h-[90vh] sm:p-8 lg:flex-row lg:gap-12 lg:p-12"
-      >
+      <div className="flex min-h-full items-center justify-center p-4 py-6 sm:p-8 lg:p-20">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="product-modal-title"
+          onClick={(event) => event.stopPropagation()}
+          className="relative flex w-full max-w-[1080px] flex-col gap-8 rounded-3xl border border-white/25 bg-[#F9F6F0]/90 p-6 shadow-2xl backdrop-blur-xl sm:p-8 lg:flex-row lg:gap-12 lg:p-12"
+        >
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#F0E7DE]/50 text-[#261C15] transition-colors hover:bg-[#F0E7DE] sm:right-6 sm:top-6"
+          className="absolute right-3 top-3 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-[#F0E7DE] text-[#261C15] shadow-md transition-colors hover:bg-white sm:right-5 sm:top-5"
         >
           <X className="h-5 w-5" />
         </button>
@@ -132,7 +145,7 @@ export default function ProductDetailModal({
             <span className="text-[13px] text-[#76655A]">{product.priceUnit}</span>
           </div>
 
-          <p className="whitespace-pre-line text-sm leading-relaxed text-[#76655A]">
+          <p className="text-sm leading-relaxed text-[#76655A]">
             {product.description}
           </p>
 
@@ -144,7 +157,7 @@ export default function ProductDetailModal({
               <button
                 type="button"
                 aria-label="Decrease quantity"
-                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                onClick={() => setQuantity(quantity - 1)}
                 className="flex h-16 w-16 shrink-0 items-center justify-center"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#C59B78] bg-[#3D2A1F] text-[#C59B78]">
@@ -154,16 +167,26 @@ export default function ProductDetailModal({
 
               <span className="h-9 w-px shrink-0 bg-[#C59B78]/25" />
 
-              <span className="flex-1 text-center text-2xl font-semibold text-white">
-                {quantity}
-              </span>
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                aria-label="Quantity"
+                value={quantityInput}
+                onChange={(event) => {
+                  const digits = event.target.value.replace(/\D/g, "");
+                  setQuantityInput(digits);
+                }}
+                onBlur={() => setQuantityInput(String(quantity))}
+                className="min-w-0 flex-1 bg-transparent text-center text-2xl font-semibold text-white outline-none"
+              />
 
               <span className="h-9 w-px shrink-0 bg-[#C59B78]/25" />
 
               <button
                 type="button"
                 aria-label="Increase quantity"
-                onClick={() => setQuantity((q) => q + 1)}
+                onClick={() => setQuantity(quantity + 1)}
                 className="flex h-16 w-16 shrink-0 items-center justify-center"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#C59B78] text-[#2E1E17]">
@@ -175,12 +198,26 @@ export default function ProductDetailModal({
 
           <a
             href="#contact"
-            onClick={onClose}
+            onClick={(event) => {
+              event.preventDefault();
+              saveInquiryPrefill({
+                gift: product.name,
+                quantity: String(quantity),
+              });
+              onClose();
+              if (window.location.hash === "#contact") {
+                window.dispatchEvent(new Event("hashchange"));
+              } else {
+                window.location.hash = "contact";
+              }
+              document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+            }}
             className="mt-auto flex items-center justify-center gap-2 rounded-full border border-[#C59B78] bg-[#211610] px-8 py-4 text-sm font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#2E1E17]"
           >
             Submit Inquiry
             <ArrowRight className="h-4 w-4" />
           </a>
+        </div>
         </div>
       </div>
     </div>

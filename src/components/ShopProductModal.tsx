@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowRight, Star, X } from "lucide-react";
 import type { ShopProduct } from "@/data/shopProducts";
 import { SHOP_RATING } from "@/data/shopProducts";
+import { saveInquiryPrefill } from "@/lib/inquiry";
 
 export default function ShopProductModal({
   product,
@@ -180,7 +181,17 @@ export default function ShopProductModal({
 
           <a
             href="#contact"
-            onClick={onClose}
+            onClick={(event) => {
+              event.preventDefault();
+              saveInquiryPrefill({ gift: product.name });
+              onClose();
+              if (window.location.hash === "#contact") {
+                window.dispatchEvent(new Event("hashchange"));
+              } else {
+                window.location.hash = "contact";
+              }
+              document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+            }}
             className="mt-auto flex items-center justify-center gap-2 rounded-full border border-[#C59B78] bg-[#211610] px-8 py-4 text-sm font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#321E14]"
           >
             Submit Inquiry

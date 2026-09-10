@@ -32,16 +32,16 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Signature | Premium Corporate Gifting",
+  title: "Corporate Gifting | Sugar Coated Signature",
   description:
-    "Premium corporate gifts in stunning, customizable packaging. Fast turnaround, white-glove service.",
+    "Premium corporate gifts that are truly memorable. Custom packaging, inclusive options, and fast turnaround. Place your order today.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${interTight.variable} ${redHatDisplay.variable} ${plusJakartaSans.variable} h-full antialiased`}
+      className={`${inter.variable} ${interTight.variable} ${redHatDisplay.variable} ${plusJakartaSans.variable} h-full scroll-smooth antialiased`}
     >
       <head>
         <link

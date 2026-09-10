@@ -4,7 +4,6 @@ export type Addon = {
   price: number;
   image: string;
   description: string;
-  defaultSelected: boolean;
 };
 
 export const ADDONS: Addon[] = [
@@ -15,7 +14,6 @@ export const ADDONS: Addon[] = [
     image: "/images/addons/single-acrylic-box.png",
     description:
       "A classy, translucent box with our signature chocolate-crisp bites; the most elegant add-on.",
-    defaultSelected: true,
   },
   {
     slug: "4oz-bag",
@@ -24,7 +22,6 @@ export const ADDONS: Addon[] = [
     image: "/images/addons/4oz-bag.png",
     description:
       "A delicious bag of our signature chocolate-crisp bites; everyone's go-to add-on.",
-    defaultSelected: true,
   },
   {
     slug: "corporate-gift-assorted-bags",
@@ -33,7 +30,6 @@ export const ADDONS: Addon[] = [
     image: "/images/addons/corporate-gift-assorted-bags.png",
     description:
       "A curated assortment of our signature chocolate-crisp bites, nestled inside a premium magnetic gift box.",
-    defaultSelected: false,
   },
   {
     slug: "corporate-gift-acrylic-boxes",
@@ -42,6 +38,5 @@ export const ADDONS: Addon[] = [
     image: "/images/addons/corporate-gift-acrylic-boxes.png",
     description:
       "A matching pair of our best-selling acrylic boxes, set inside a premium magnetic outer box.",
-    defaultSelected: false,
   },
 ];

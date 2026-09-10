@@ -11,7 +11,7 @@ export default function Hero() {
       {/* fills whatever is left of the screen, so nothing below can peek in */}
       <div className="relative flex min-h-[380px] flex-1 flex-col justify-between">
         <video
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full bg-transparent object-cover max-sm:object-contain max-sm:object-center"
           poster="/images/hero-box.png"
           autoPlay
           loop
@@ -25,14 +25,19 @@ export default function Hero() {
         </video>
 
         <div className="relative z-10 flex flex-col items-center px-6 pt-5 text-center sm:pt-6 lg:pt-6 2xl:pt-8">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-[#F1D9C1] sm:text-sm lg:text-base 2xl:text-2xl">
-            A Gift That
-          </p>
-          <h1
-            className="mt-1 max-w-3xl text-3xl italic leading-[1.35] text-[#F1D9C1] sm:text-4xl lg:max-w-3xl lg:text-5xl 2xl:max-w-6xl 2xl:text-[6.125rem]"
-            style={{ fontFamily: "var(--font-serif-display)" }}
-          >
-            Will Be Remembered.
+          {/* One h1 carrying the whole phrase — the two lines are styled spans, so
+              crawlers read "A Gift that Will Be Remembered." rather than half of it.
+              The trailing space keeps the lines separate words in the text content. */}
+          <h1 className="flex flex-col items-center">
+            <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#F1D9C1] sm:text-sm lg:text-base 2xl:text-2xl">
+              A Gift that{" "}
+            </span>
+            <span
+              className="mt-1 max-w-3xl text-3xl italic leading-[1.35] text-[#F1D9C1] sm:text-4xl lg:max-w-3xl lg:text-5xl 2xl:max-w-6xl 2xl:text-[6.125rem]"
+              style={{ fontFamily: "var(--font-serif-display)" }}
+            >
+              Will Be Remembered.
+            </span>
           </h1>
         </div>
 

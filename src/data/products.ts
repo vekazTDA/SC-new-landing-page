@@ -4,8 +4,6 @@ export type Product = {
   images: string[];
   description: string;
   price: string;
-  badgeLetter: string;
-  badgeColor: string;
   eyebrow: string;
   inStock: boolean;
   rating: number;
@@ -27,8 +25,6 @@ export const PRODUCTS: Product[] = [
     description:
       "A ceramic brewing kit and an elegant mug. Because great meetings begin with a great first sip.",
     price: "$19.00",
-    badgeLetter: "s",
-    badgeColor: "#927C6B",
     eyebrow: "Signature Curation",
     inStock: true,
     rating: 4.9,
@@ -43,8 +39,6 @@ export const PRODUCTS: Product[] = [
     description:
       "A pair of artisanal glasses along with tongs and reusable whisky stones. For those who like a refined way to wind down after a busy day.",
     price: "$19.00",
-    badgeLetter: "&",
-    badgeColor: "#88654A",
     eyebrow: "Signature Curation",
     inStock: true,
     rating: 4.9,
@@ -57,10 +51,8 @@ export const PRODUCTS: Product[] = [
     name: "The Writer's Choice",
     images: ["/images/products/the-writers-choice.png"],
     description:
-      "A custom notebook, a quality pen, and an insulated bottle that keeps drinks hot for hours (or cold just as long). \nHydrated. Organized. Appreciated.",
+      "A custom notebook, a quality pen, and an insulated bottle that keeps drinks hot for hours (or cold just as long). Hydrated. Organized. Appreciated.",
     price: "$49.00",
-    badgeLetter: "&",
-    badgeColor: "#3D2C1F",
     eyebrow: "Signature Curation",
     inStock: true,
     rating: 4.9,
@@ -75,8 +67,6 @@ export const PRODUCTS: Product[] = [
     description:
       "A deep tissue percussion massager with six attachments and a recovery wrap to match. This was made for the leader who never stops moving.",
     price: "$74.00",
-    badgeLetter: "&",
-    badgeColor: "#88654A",
     eyebrow: "Signature Curation",
     inStock: true,
     rating: 4.9,
@@ -91,8 +81,6 @@ export const PRODUCTS: Product[] = [
     description:
       "An effortless electric bottle opener and the bar tools to back it up. For celebrating wins, big and small.",
     price: "$74.00",
-    badgeLetter: "&",
-    badgeColor: "#3D2C1F",
     eyebrow: "Signature Curation",
     inStock: true,
     rating: 4.9,
