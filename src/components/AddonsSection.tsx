@@ -110,9 +110,9 @@ export default function AddonsSection() {
 
         <form
           onSubmit={onSubmit}
-          className="mt-[min(1.25rem,2.5svh)] flex flex-col gap-4 rounded-2xl border border-[#33231B] bg-[#2E211A] p-[min(1.25rem,2.4svh)] shadow-[0px_24px_48px_0px_rgba(0,0,0,0.5)] sm:flex-row sm:items-center sm:justify-between lg:mt-8"
+          className="mt-[min(1.25rem,2.5svh)] flex flex-col gap-4 rounded-2xl border border-[#33231B] bg-[#2E211A] p-[min(1.25rem,2.4svh)] shadow-[0px_24px_48px_0px_rgba(0,0,0,0.5)] lg:mt-8 lg:flex-row lg:items-end lg:justify-between lg:gap-6"
         >
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 w-full flex-1">
             <button
               type="button"
               onClick={() => setNoteOpen((open) => !open)}
@@ -129,7 +129,7 @@ export default function AddonsSection() {
                 onChange={(event) => setNote(event.target.value)}
                 placeholder="Please add my logo to the boxes and send them to this address"
                 autoFocus
-                className="mt-3 w-full max-w-md rounded-lg border border-[#7E7469] bg-transparent px-3 py-2 text-sm text-[#EFE9E0] placeholder:text-[#AFA599] focus:border-[#C5A880] focus:outline-none sm:w-96"
+                className="mt-3 w-full max-w-md rounded-lg border border-[#7E7469] bg-transparent px-3 py-2 text-sm text-[#EFE9E0] placeholder:text-[#AFA599] focus:border-[#C5A880] focus:outline-none"
               />
             )}
 
@@ -140,7 +140,7 @@ export default function AddonsSection() {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="Your email*"
-              className="mt-3 w-full max-w-md rounded-lg border border-[#7E7469] bg-transparent px-3 py-2 text-sm text-[#EFE9E0] placeholder:text-[#AFA599] focus:border-[#C5A880] focus:outline-none sm:w-96"
+              className="mt-3 w-full max-w-md rounded-lg border border-[#7E7469] bg-transparent px-3 py-2 text-sm text-[#EFE9E0] placeholder:text-[#AFA599] focus:border-[#C5A880] focus:outline-none"
             />
 
             {submitState === "success" && (
@@ -155,19 +155,17 @@ export default function AddonsSection() {
             )}
           </div>
 
-          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-8">
-            {!noteOpen && (
-              <p className="max-w-xs text-right text-[13px] uppercase leading-snug text-[#AFA599] sm:text-left">
-                {selectedAddons.length > 0
-                  ? `${selectedAddons.length} add-on${selectedAddons.length > 1 ? "s" : ""} selected +$${total.toFixed(2)}`
-                  : "No add-ons selected"}
-              </p>
-            )}
+          <div className="flex w-full shrink-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between lg:w-auto lg:justify-end lg:gap-6">
+            <p className="text-[13px] uppercase leading-snug text-[#AFA599]">
+              {selectedAddons.length > 0
+                ? `${selectedAddons.length} add-on${selectedAddons.length > 1 ? "s" : ""} selected +$${total.toFixed(2)}`
+                : "No add-ons selected"}
+            </p>
 
             <button
               type="submit"
               disabled={submitState === "submitting"}
-              className="flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#C5A880] px-7 py-3.5 text-[13px] font-semibold uppercase tracking-[0.12em] text-[#140D0A] transition-colors hover:bg-[#d4b992] disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex w-full shrink-0 items-center justify-center gap-2 rounded-lg bg-[#C5A880] px-7 py-3.5 text-[13px] font-semibold uppercase tracking-[0.12em] text-[#140D0A] transition-colors hover:bg-[#d4b992] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
               {submitState === "submitting" ? "Sending…" : "Submit"}
               <ArrowRight className="h-4 w-4" />

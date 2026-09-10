@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { Calendar, CheckCircle2, ChevronDown } from "lucide-react";
+import { CheckCircle2, ChevronDown } from "lucide-react";
+import DatePickerField from "@/components/DatePickerField";
 import { consumeInquiryPrefill } from "@/lib/inquiry";
 import { submitWeb3Form } from "@/lib/web3forms";
 
@@ -26,9 +27,7 @@ type SubmitState = "idle" | "submitting" | "success" | "error";
 
 export default function ContactSection() {
   const formId = useId();
-  // the field shows its placeholder as text until focused, then becomes a real date picker
-  const [dateActive, setDateActive] = useState(false);
-  const [openDatePicker, setOpenDatePicker] = useState(false);
+  const [dateValue, setDateValue] = useState("");
   const [giftValue, setGiftValue] = useState("");
   const [quantityValue, setQuantityValue] = useState("");
   const [giftSelected, setGiftSelected] = useState(false);
@@ -37,7 +36,6 @@ export default function ContactSection() {
   const [errorMessage, setErrorMessage] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const dateInputRef = useRef<HTMLInputElement>(null);
   const quantityInputRef = useRef<HTMLInputElement>(null);
 
   // Prefill gift + quantity when arriving from a product "Submit Inquiry" CTA.
@@ -66,29 +64,6 @@ export default function ContactSection() {
     return () => window.removeEventListener("hashchange", applyPrefill);
   }, []);
 
-
-  // After switching to type="date", open the native calendar popup.
-  useEffect(() => {
-    if (!dateActive || !openDatePicker) return;
-    const input = dateInputRef.current;
-    if (!input) return;
-
-    const frame = requestAnimationFrame(() => {
-      try {
-        input.showPicker?.();
-      } catch {
-        // Some browsers only allow showPicker from a direct user gesture.
-      }
-      setOpenDatePicker(false);
-    });
-
-    return () => cancelAnimationFrame(frame);
-  }, [dateActive, openDatePicker]);
-
-  const activateDateField = () => {
-    setDateActive(true);
-    setOpenDatePicker(true);
-  };
 
   // The card arrives out of focus and sharpens as it rises into place — the mirror
   // of the CTA banner defocusing on its way out further down the page.
@@ -155,7 +130,7 @@ export default function ContactSection() {
 
       setSubmitState("success");
       form.reset();
-      setDateActive(false);
+      setDateValue("");
       setGiftValue("");
       setQuantityValue("");
       setGiftSelected(false);
@@ -386,26 +361,16 @@ export default function ContactSection() {
                       className={FIELD_CLASS}
                     />
                   </div>
-                  <div className="relative">
+                  <div>
                     <label htmlFor={`${formId}-date`} className="sr-only">
                       When would you need this by?
                     </label>
-                    <input
-                      ref={dateInputRef}
+                    <DatePickerField
                       id={`${formId}-date`}
                       name="date"
-                      type={dateActive ? "date" : "text"}
+                      value={dateValue}
+                      onChange={setDateValue}
                       placeholder="When Would You Need This By?"
-                      onFocus={activateDateField}
-                      onClick={activateDateField}
-                      onBlur={(event) => {
-                        if (!event.currentTarget.value) setDateActive(false);
-                      }}
-                      className={`${FIELD_CLASS} relative pr-8 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0`}
-                    />
-                    <Calendar
-                      aria-hidden="true"
-                      className="pointer-events-none absolute right-0 top-1 h-5 w-5 text-[#F1D9C1]"
                     />
                   </div>
                 </div>
