@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import SectionBlend from "./SectionBlend";
 
 const FRAME_COUNT = 120;
 
@@ -347,6 +348,20 @@ export default function BoxShowcaseSection() {
           ))}
         </ul>
       </div>
+
+      {/* Runs the showcase into the near-black shop section. It sits outside the sticky
+          box — and after it, so it paints over the canvas — because it belongs to the end
+          of the 250svh track, not to the viewport the canvas is pinned to. At that point
+          the canvas is bottom-aligned with the section and its last ~200px are flat
+          backdrop (row stddev 0.4-1.2; content only starts around 240px), so nothing is
+          covered. A plain alpha ramp is enough here: both ends are warm (#AEA096 and
+          #241109 sit at r-b 24 and 27), so the fade stays brown instead of going grey the
+          way the near-black to cream one did. */}
+      <SectionBlend
+        to="#241109"
+        mid={{ at: "45%", alpha: 0.12 }}
+        className="h-48 sm:h-64 lg:h-[320px]"
+      />
     </section>
   );
 }

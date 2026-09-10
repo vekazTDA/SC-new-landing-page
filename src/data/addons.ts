@@ -19,7 +19,7 @@ export const ADDONS: Addon[] = [
     slug: "4oz-bag",
     title: "4 oz. Bag",
     price: 7.95,
-    image: "/images/addons/4oz-bag.png",
+    image: "/images/addons/4oz-bag-hero.png",
     description:
       "A delicious bag of our signature chocolate-crisp bites; everyone's go-to add-on.",
   },

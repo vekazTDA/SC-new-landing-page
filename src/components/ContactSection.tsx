@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { CheckCircle2, ChevronDown } from "lucide-react";
 import DatePickerField from "@/components/DatePickerField";
+import SectionBlend from "@/components/SectionBlend";
 import { consumeInquiryPrefill } from "@/lib/inquiry";
 import { submitWeb3Form } from "@/lib/web3forms";
 
@@ -150,6 +151,9 @@ export default function ContactSection() {
       id="contact"
       className="relative isolate flex min-h-svh scroll-mt-[var(--header-height,84px)] flex-col justify-center overflow-hidden bg-[#F2EDE5]"
     >
+      {/* Only 3-5 per channel into the CTA banner, but enough to read as a line. */}
+      <SectionBlend to="#EFE9E0" className="h-12 sm:h-16" />
+
       <div className="relative mx-auto grid max-w-[1728px] gap-10 px-6 pb-[min(2.5rem,4svh)] pt-[min(2.5rem,4svh)] sm:px-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:items-start lg:gap-12 lg:px-12 lg:pb-14 lg:pt-14 2xl:px-14">
         <div className="max-w-xl">
           <h2

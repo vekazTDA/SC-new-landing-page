@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
-import { ArrowRight, CheckCircle2, Minus, Plus, Star, X } from "lucide-react";
+import { ArrowRight, CheckCircle2, Minus, Plus, Star } from "lucide-react";
 import type { Product } from "@/data/products";
 import { submitWeb3Form } from "@/lib/web3forms";
 
@@ -19,6 +20,7 @@ export default function ProductDetailModal({
   onClose: () => void;
 }) {
   const formId = useId();
+  const [mounted, setMounted] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [quantityInput, setQuantityInput] = useState(
     String(product?.defaultQuantity ?? 1)
@@ -27,6 +29,10 @@ export default function ProductDetailModal({
   const [errorMessage, setErrorMessage] = useState("");
 
   const quantity = Math.max(1, Number.parseInt(quantityInput, 10) || 1);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!product) return;
@@ -41,7 +47,7 @@ export default function ProductDetailModal({
     };
   }, [product, onClose]);
 
-  if (!product) return null;
+  if (!product || !mounted) return null;
 
   const setQuantity = (next: number) => {
     setQuantityInput(String(Math.max(1, next)));
@@ -77,9 +83,9 @@ export default function ProductDetailModal({
     }
   };
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-[#1B120B]/80"
+      className="fixed inset-0 z-[90] overflow-y-auto overscroll-contain bg-[#1B120B]/80"
       onClick={onClose}
     >
       <div className="flex min-h-full items-center justify-center p-4 py-6 sm:p-8 lg:p-20">
@@ -88,17 +94,26 @@ export default function ProductDetailModal({
           aria-modal="true"
           aria-labelledby="product-modal-title"
           onClick={(event) => event.stopPropagation()}
-          className="relative flex w-full max-w-[1080px] flex-col gap-8 rounded-3xl border border-white/25 bg-[#F9F6F0]/90 p-6 shadow-2xl backdrop-blur-xl sm:p-8 lg:flex-row lg:gap-12 lg:p-12"
+          className="relative flex w-full max-w-[1080px] flex-col rounded-3xl border border-white/25 bg-[#F9F6F0]/90 p-6 shadow-2xl backdrop-blur-xl sm:p-8 lg:p-12"
         >
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="absolute right-3 top-3 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-[#F0E7DE] text-[#261C15] shadow-md transition-colors hover:bg-white sm:right-5 sm:top-5"
-          >
-            <X className="h-5 w-5" />
-          </button>
+          <div className="mb-4 flex justify-end sm:mb-5">
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F6F1EA] shadow-md transition-colors hover:bg-white"
+            >
+              <Image
+                src="/close-icon.svg"
+                alt=""
+                width={14}
+                height={14}
+                className="h-3.5 w-3.5"
+              />
+            </button>
+          </div>
 
+          <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
           <div className="flex flex-col gap-5 lg:w-[480px] lg:shrink-0">
             <div className="relative h-[280px] w-full overflow-hidden rounded-2xl border border-[#D8CDC4] sm:h-[380px]">
               <Image
@@ -342,8 +357,10 @@ export default function ProductDetailModal({
               </>
             )}
           </div>
+          </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

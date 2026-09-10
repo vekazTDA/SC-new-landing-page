@@ -13,15 +13,15 @@ export default function AddonCard({
 }) {
   return (
     <div className="group flex w-full flex-col overflow-hidden rounded-[20px] border border-[#C5A880]/40 bg-[#221712] shadow-[0px_16px_32px_0px_rgba(0,0,0,0.38)]">
-      <div className="relative h-[min(170px,20svh)] w-full sm:h-[min(190px,21svh)]">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#140D0A] sm:aspect-[16/10]">
         <Image
           src={addon.image}
           alt={addon.title}
           fill
-          sizes="(min-width: 1280px) 24vw, (min-width: 640px) 45vw, 90vw"
-          className="object-cover"
+          sizes="(min-width: 1280px) 24vw, (min-width: 640px) 45vw, 100vw"
+          className="object-cover object-center"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,13,10,0)_50%,rgba(20,13,10,0.8)_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,13,10,0)_65%,rgba(20,13,10,0.55)_100%)]" />
 
         {selected && (
           <span className="absolute left-4 top-4 rounded-full bg-[#C5A880] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#140D0A]">

@@ -4,16 +4,26 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
-/** How far the card defocuses once the footer starts arriving. */
+/** How far the card defocuses at either end of its pass through the viewport. */
 const MAX_BLUR = 40;
 const MIN_SCALE = 0.92;
 const MIN_OPACITY = 0.5;
+
+/**
+ * Ramp lengths as a fraction of the viewport. The card is 815 of 900px tall, so with the
+ * exit ramp used on both sides it would only be sharp for ~184px of scroll — it never
+ * looks settled. A shorter entry ramp resolves it sooner and leaves ~455px sharp; the
+ * blur, scale and opacity are identical in both directions.
+ */
+const ENTER_RAMP = 0.6;
+const EXIT_RAMP = 0.9;
 
 export default function CtaBannerSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // The card pulls out of focus as it scrolls away, letting the footer arrive sharp.
+  // The card arrives out of focus, sharpens as it rises into place, then pulls back out
+  // of focus on its way past — so the footer arrives sharp.
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -26,22 +36,25 @@ export default function CtaBannerSection() {
       if (!section || !card) return;
 
       const rect = section.getBoundingClientRect();
-      const ramp = window.innerHeight * 0.9;
-      const progress = Math.min(
-        Math.max((window.innerHeight - rect.bottom) / ramp, 0),
-        1
-      );
+      const viewport = window.innerHeight;
+      const clamp = (value: number) => Math.min(Math.max(value, 0), 1);
 
-      if (progress === 0) {
+      // How far the section has risen in (0 while still below the fold, 1 once settled)
+      // and how far it has since climbed out of the top.
+      const entered = clamp((viewport - rect.top) / (viewport * ENTER_RAMP));
+      const left = clamp((viewport - rect.bottom) / (viewport * EXIT_RAMP));
+      const defocus = Math.max(1 - entered, left);
+
+      if (defocus === 0) {
         card.style.filter = "";
         card.style.transform = "";
         card.style.opacity = "";
         return;
       }
 
-      card.style.filter = `blur(${(progress * MAX_BLUR).toFixed(1)}px)`;
-      card.style.transform = `scale(${(1 - progress * (1 - MIN_SCALE)).toFixed(3)})`;
-      card.style.opacity = `${(1 - progress * (1 - MIN_OPACITY)).toFixed(3)}`;
+      card.style.filter = `blur(${(defocus * MAX_BLUR).toFixed(1)}px)`;
+      card.style.transform = `scale(${(1 - defocus * (1 - MIN_SCALE)).toFixed(3)})`;
+      card.style.opacity = `${(1 - defocus * (1 - MIN_OPACITY)).toFixed(3)}`;
     };
 
     const onScroll = () => {

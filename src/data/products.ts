@@ -88,4 +88,18 @@ export const PRODUCTS: Product[] = [
     priceUnit: "/ tier base price",
     defaultQuantity: 50,
   },
+  {
+    slug: "the-respite",
+    name: "The Respite",
+    images: ["/images/products/the-respite.png"],
+    description:
+      "A signature scented candle and a set of reed diffusers, designed to make appreciation feel personal, not routine.",
+    price: "$49.00",
+    eyebrow: "Signature Curation",
+    inStock: true,
+    rating: 4.9,
+    reviewCount: 1232,
+    priceUnit: "/ tier base price",
+    defaultQuantity: 50,
+  },
 ];

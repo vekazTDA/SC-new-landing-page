@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
-import { ArrowRight, Star, X } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import type { ShopProduct } from "@/data/shopProducts";
 import { SHOP_RATING } from "@/data/shopProducts";
 import { saveInquiryPrefill } from "@/lib/inquiry";
@@ -14,10 +15,15 @@ export default function ShopProductModal({
   product: ShopProduct | null;
   onClose: () => void;
 }) {
+  const [mounted, setMounted] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState(
     () => product?.sizeOptions?.findIndex((o) => o.badge === "Popular") ?? 0
   );
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!product) return;
@@ -32,14 +38,14 @@ export default function ShopProductModal({
     };
   }, [product, onClose]);
 
-  if (!product) return null;
+  if (!product || !mounted) return null;
 
   const size = product.sizeOptions?.[selectedSize];
   const displayPrice = size?.price ?? product.price;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#241109]/85 p-4 sm:p-8 lg:p-20"
+      className="fixed inset-0 z-[90] flex items-center justify-center bg-[#241109]/85 p-4 sm:p-8 lg:p-20"
       onClick={onClose}
     >
       <div
@@ -47,16 +53,34 @@ export default function ShopProductModal({
         aria-modal="true"
         aria-labelledby="shop-modal-title"
         onClick={(event) => event.stopPropagation()}
-        className="relative flex w-full max-w-[980px] flex-col gap-8 overflow-y-auto rounded-3xl bg-[#EAE5DE] p-6 shadow-[0px_24px_48px_0px_rgba(18,8,4,0.3)] max-h-[90vh] sm:p-8 lg:flex-row lg:gap-10 lg:p-10"
+        className="relative flex w-full max-w-[980px] flex-col overflow-y-auto rounded-3xl bg-[#EAE5DE] p-6 shadow-[0px_24px_48px_0px_rgba(18,8,4,0.3)] max-h-[90vh] sm:p-8 lg:p-10"
       >
+        <div className="mb-4 flex justify-end sm:mb-5">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F6F1EA] shadow-md transition-colors hover:bg-white"
+          >
+            <Image
+              src="/close-icon.svg"
+              alt=""
+              width={14}
+              height={14}
+              className="h-3.5 w-3.5"
+            />
+          </button>
+        </div>
+
+        <div className="flex flex-col gap-8 lg:flex-row lg:gap-10">
         <div className="flex flex-col gap-4 lg:w-[420px] lg:shrink-0">
-          <div className="relative h-[280px] w-full overflow-hidden rounded-2xl sm:h-[400px]">
+          <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-[#241109]">
             <Image
               src={product.images[activeImage]}
               alt={product.name}
               fill
               sizes="(min-width: 1024px) 420px, 90vw"
-              className="object-cover"
+              className="object-cover object-center"
               priority
             />
           </div>
@@ -86,23 +110,13 @@ export default function ShopProductModal({
         </div>
 
         <div className="flex flex-1 flex-col justify-center gap-7">
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#8C7E74]">
-                sugar coated
-              </span>
-              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#1B7A5C]">
-                • In Stock
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#D0C8BF] bg-white/20 text-[#1C1826] transition-colors hover:bg-white/40"
-            >
-              <X className="h-4 w-4" />
-            </button>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#8C7E74]">
+              sugar coated
+            </span>
+            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#1B7A5C]">
+              • In Stock
+            </span>
           </div>
 
           <div className="flex flex-col gap-3">
@@ -198,7 +212,9 @@ export default function ShopProductModal({
             <ArrowRight className="h-4 w-4" />
           </a>
         </div>
+        </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

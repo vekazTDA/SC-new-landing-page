@@ -5,6 +5,7 @@ import AddonsSection from "@/components/AddonsSection";
 import BoxShowcaseSection from "@/components/BoxShowcaseSection";
 import ShopSection from "@/components/ShopSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import AppreciationSection from "@/components/AppreciationSection";
 import ContactSection from "@/components/ContactSection";
 import CtaBannerSection from "@/components/CtaBannerSection";
 import SiteFooter from "@/components/SiteFooter";
@@ -20,6 +21,7 @@ export default function Home() {
         <BoxShowcaseSection />
         <ShopSection />
         <TestimonialsSection />
+        <AppreciationSection />
         <ContactSection />
         <CtaBannerSection />
       </main>

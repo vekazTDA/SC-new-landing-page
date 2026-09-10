@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import ProductCard from "./ProductCard";
 import ProductDetailModal from "./ProductDetailModal";
+import SectionBlend from "./SectionBlend";
 import { PRODUCTS, type Product } from "@/data/products";
 
 /**
@@ -14,6 +15,31 @@ import { PRODUCTS, type Product } from "@/data/products";
  */
 const RISE_MS = 700;
 const OUTER_DELAY_MS = 400;
+
+function InquiryCta() {
+  return (
+    <>
+      <p
+        className="italic leading-[1.35] text-[#E9DFD6]"
+        style={{ fontFamily: "var(--font-serif-display)" }}
+      >
+        <span className="text-lg sm:text-xl lg:text-2xl">
+          Have a specific quantity or custom request in mind?
+        </span>
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-[#EFE9E0]/80 sm:text-base lg:text-lg">
+        Our team will tailor your order and confirm the details as soon as we
+        can.
+      </p>
+      <a
+        href="#contact"
+        className="mt-4 inline-flex items-center justify-center rounded-[14px] bg-[#4F2B1C]/[0.86] px-6 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-[#F0E7DE] transition-colors hover:bg-[#4F2B1C]"
+      >
+        Submit Inquiry
+      </a>
+    </>
+  );
+}
 
 export default function ProductsSection() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -66,6 +92,10 @@ export default function ProductsSection() {
         className="pointer-events-none absolute inset-0 opacity-60 [background:radial-gradient(60%_50%_at_50%_30%,#E3DDD9_0%,transparent_70%)]"
       />
 
+      {/* Softens the seam into the add-ons section — the two taupes are only 7 per
+          channel apart, which reads as a band rather than a change. */}
+      <SectionBlend to="#A5968C" className="h-16 sm:h-20 lg:h-28" />
+
 
       <div className="relative mx-auto max-w-[1728px] px-6 pb-16 pt-[calc(var(--header-height,84px)+0.75rem)] sm:px-10 sm:pb-20 sm:pt-16 lg:px-12 lg:pb-24 lg:pt-20 2xl:px-14">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
@@ -84,25 +114,9 @@ export default function ProductsSection() {
             </p>
           </div>
 
-          <div className="max-w-md lg:text-right">
-            <p
-              className="italic leading-[1.35] text-[#E9DFD6]"
-              style={{ fontFamily: "var(--font-serif-display)" }}
-            >
-              <span className="text-lg sm:text-xl lg:text-2xl">
-                Have a specific quantity or custom request in mind?
-              </span>
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-[#EFE9E0]/80 sm:text-base lg:text-lg">
-              Our team will tailor your order and confirm the details as soon
-              as we can.
-            </p>
-            <a
-              href="#contact"
-              className="mt-4 inline-flex items-center justify-center rounded-[14px] bg-[#4F2B1C]/[0.86] px-6 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-[#F0E7DE] transition-colors hover:bg-[#4F2B1C]"
-            >
-              Submit Inquiry
-            </a>
+          {/* Desktop: sits beside the heading. Mobile: rendered below the cards. */}
+          <div className="hidden max-w-md lg:block lg:text-right">
+            <InquiryCta />
           </div>
         </div>
 
@@ -116,7 +130,7 @@ export default function ProductsSection() {
 
         <div
           ref={gridRef}
-          className="mt-8 grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3 xl:gap-8"
+          className="mt-8 grid grid-cols-2 justify-items-center gap-3 sm:gap-8 xl:grid-cols-3 xl:gap-8"
         >
           {PRODUCTS.map((product, index) => (
             // The reveal lives on a wrapper, not on the card: the card already owns
@@ -125,7 +139,7 @@ export default function ProductsSection() {
             // row height the way it did when it was the grid item itself.
             <div
               key={product.slug}
-              className={`card-reveal flex w-full justify-center transition ease-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none ${
+              className={`card-reveal flex h-full w-full justify-center transition ease-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none ${
                 revealed ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
               }`}
               style={{
@@ -136,6 +150,10 @@ export default function ProductsSection() {
               <ProductCard product={product} onSelect={setSelectedProduct} />
             </div>
           ))}
+        </div>
+
+        <div className="mt-10 max-w-md lg:hidden">
+          <InquiryCta />
         </div>
       </div>
 
