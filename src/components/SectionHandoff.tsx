@@ -21,8 +21,9 @@ import { useEffect, useRef } from "react";
  *
  * That makes the height load-bearing, not a taste call: the change can only happen over
  * (height - viewport), so 100svh is a hard floor — at or under it both edges are on
- * screen at once and the steps this exists to remove come straight back. 115svh is
- * about as short as it goes while the change still reads as smooth rather than a snap.
+ * screen at once and the steps this exists to remove come straight back. 110svh is the
+ * shortest setting that still reads as a change rather than a snap — it leaves ~77px of
+ * scroll to make it in, and under ~105svh the window closes to a few dozen pixels.
  */
 const FROM = "#241109";
 /** AppreciationSection (#EFE9E0) is lg:hidden, so from lg up ContactSection follows. */
@@ -79,7 +80,7 @@ export default function SectionHandoff() {
       ref={ref}
       aria-hidden="true"
       // #241109 as the served value, so it matches the cards section before hydration
-      className="h-[115svh] w-full bg-[#241109]"
+      className="h-[110svh] w-full bg-[#241109]"
     />
   );
 }
