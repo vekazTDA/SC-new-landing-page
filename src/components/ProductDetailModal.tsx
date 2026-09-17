@@ -3,8 +3,9 @@
 import { useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import { ArrowRight, CheckCircle2, Minus, Plus, Star } from "lucide-react";
+import { ArrowRight, CheckCircle2, Minus, Plus } from "lucide-react";
 import type { Product } from "@/data/products";
+import StarRating from "./StarRating";
 import { submitWeb3Form } from "@/lib/web3forms";
 
 const FIELD_CLASS =
@@ -215,18 +216,11 @@ export default function ProductDetailModal({
                     {product.name}
                   </h2>
 
-                  <div className="flex items-center gap-1">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <Star
-                        key={index}
-                        className="h-3.5 w-3.5 fill-[#C59B78] text-[#C59B78]"
-                      />
-                    ))}
-                    <span className="ml-1 text-[13px] text-[#76655A]">
-                      {product.rating} (
-                      {product.reviewCount.toLocaleString()} reviews)
-                    </span>
-                  </div>
+                  <StarRating
+                    rating={product.rating}
+                    reviewCount={product.reviewCount}
+                    colour="text-[#C59B78]"
+                  />
                 </div>
 
                 <div className="flex items-baseline gap-2">

@@ -36,6 +36,8 @@ export function toShopProduct(row: ShopProductRow): ShopProduct {
     price: num(row.price),
     images: urls(row.images),
     ...(row.modal_description ? { modalDescription: row.modal_description } : {}),
+    rating: num(row.rating),
+    reviewCount: row.review_count,
     ...(row.size_options && row.size_options.length > 0
       ? {
           sizeOptions: row.size_options.map((option) => ({
@@ -57,5 +59,7 @@ export function toAddon(row: AddonRow): Addon {
     // renders a single image, so the hero is images[0].
     image: urls(row.images)[0] ?? "",
     description: row.description,
+    rating: num(row.rating),
+    reviewCount: row.review_count,
   };
 }

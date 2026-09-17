@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { ShopProduct } from "@/data/shopProducts";
 import { SHOP_RATING } from "@/data/shopProducts";
+import StarRating from "./StarRating";
 import { saveInquiryPrefill } from "@/lib/inquiry";
 
 export default function ShopProductModal({
@@ -123,14 +124,14 @@ export default function ShopProductModal({
             <h2 id="shop-modal-title" className="text-3xl font-semibold leading-tight text-[#1C1826] sm:text-[2.25rem]">
               {product.name}
             </h2>
-            <div className="flex items-center gap-1">
-              {Array.from({ length: 5 }).map((_, index) => (
-                <Star key={index} className="h-3.5 w-3.5 fill-[#E09E53] text-[#E09E53]" />
-              ))}
-              <span className="ml-1 text-[13px] font-medium text-[#4D433A]">
-                {SHOP_RATING.rating} ({SHOP_RATING.reviewCount.toLocaleString()} reviews)
-              </span>
-            </div>
+            {/* Per-product now, with the old shared constant as the fallback so the
+                bundled catalogue still renders identically. */}
+            <StarRating
+              rating={product.rating ?? SHOP_RATING.rating}
+              reviewCount={product.reviewCount ?? SHOP_RATING.reviewCount}
+              colour="text-[#E09E53]"
+              textClass="text-[13px] font-medium text-[#4D433A]"
+            />
           </div>
 
           <div className="flex items-baseline gap-2">

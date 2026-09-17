@@ -49,6 +49,8 @@ export type AddonRow = {
   price: string | number;
   description: string;
   images: ImageEntry[];
+  rating: string | number;
+  review_count: number;
   sort_order: number;
   is_published: boolean;
   updated_at?: string;

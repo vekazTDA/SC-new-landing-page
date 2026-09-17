@@ -93,7 +93,7 @@ export async function getShopProducts(): Promise<ShopProduct[]> {
 
 export async function getAddons(): Promise<Addon[]> {
   const rows = await fetchRows<AddonRow>(
-    "addons?select=id,slug,title,price,description,images,sort_order,is_published" + PUBLISHED,
+    "addons?select=id,slug,title,price,description,images,rating,review_count,sort_order,is_published" + PUBLISHED,
     CATALOG_TAGS.addons
   );
   if (!rows) return ADDONS;

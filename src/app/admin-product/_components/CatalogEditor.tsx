@@ -8,6 +8,7 @@ import ImageManager from "./ImageManager";
 import PreviewPane from "./PreviewPane";
 import SizeOptionsEditor from "./SizeOptionsEditor";
 import { Field, NumberField, Toggle, inputClass } from "./fields";
+import StarPicker from "./StarPicker";
 import { toAddon, toProduct, toShopProduct } from "@/lib/catalog/mappers";
 import type { CatalogKind, ImageEntry, SizeOptionRow } from "@/lib/catalog/types";
 import type { PreviewDraft, PreviewView } from "@/lib/admin/preview-protocol";
@@ -92,6 +93,8 @@ function toPreviewPayload(kind: CatalogKind, draft: Draft): PreviewDraft {
       price: draft.price,
       description: draft.description,
       images: draft.images,
+      rating: draft.rating,
+      review_count: draft.review_count,
       sort_order: draft.sort_order,
       is_published: draft.is_published,
     }),
@@ -137,6 +140,8 @@ function toRow(kind: CatalogKind, draft: Draft): Record<string, unknown> {
     title: draft.title,
     price: draft.price,
     description: draft.description,
+    rating: draft.rating,
+    review_count: draft.review_count,
   };
 }
 
@@ -360,27 +365,14 @@ export default function CatalogEditor({
                 />
               </Field>
 
-              <div className="grid grid-cols-3 gap-3">
-                <NumberField
-                  label="Rating"
-                  value={draft.rating}
-                  max={5}
-                  onChange={(value) => set("rating", value)}
-                />
-                <NumberField
-                  label="Reviews"
-                  value={draft.review_count}
-                  integer
-                  onChange={(value) => set("review_count", value)}
-                />
-                <NumberField
-                  label="Default qty"
-                  value={draft.default_quantity}
-                  integer
-                  min={1}
-                  onChange={(value) => set("default_quantity", value)}
-                />
-              </div>
+              <NumberField
+                label="Default quantity"
+                value={draft.default_quantity}
+                integer
+                min={1}
+                onChange={(value) => set("default_quantity", value)}
+                hint="Pre-filled in the inquiry form when a buyer opens this product."
+              />
 
               <Toggle
                 label="In stock"
@@ -397,6 +389,23 @@ export default function CatalogEditor({
               onChange={(options) => set("size_options", options)}
             />
           )}
+
+          {/* Every type carries its own rating and review count. Shop products used to
+              share one module-level SHOP_RATING constant and add-ons had none at all. */}
+          <div className="flex flex-col gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-3">
+            <StarPicker value={draft.rating} onChange={(value) => set("rating", value)} />
+            <NumberField
+              label="Number of reviews"
+              value={draft.review_count}
+              integer
+              onChange={(value) => set("review_count", value)}
+              hint={
+                kind === "addons"
+                  ? "Shown under the add-on title. Set 0 to hide the stars entirely."
+                  : "Shown beside the stars in the pop-up."
+              }
+            />
+          </div>
 
           <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-white/55">

@@ -4,6 +4,8 @@ export type Addon = {
   price: number;
   image: string;
   description: string;
+  rating?: number;
+  reviewCount?: number;
 };
 
 export const ADDONS: Addon[] = [

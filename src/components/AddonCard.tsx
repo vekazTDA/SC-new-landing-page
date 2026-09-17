@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Check, Plus } from "lucide-react";
 import type { Addon } from "@/data/addons";
+import StarRating from "./StarRating";
 
 export default function AddonCard({
   addon,
@@ -39,6 +40,16 @@ export default function AddonCard({
             ${addon.price.toFixed(2)}
           </span>
         </div>
+
+        {addon.rating !== undefined && (
+          <StarRating
+            rating={addon.rating}
+            reviewCount={addon.reviewCount ?? 0}
+            colour="text-[#C5A880]"
+            starSize="h-3 w-3"
+            textClass="text-[11px] text-white/55"
+          />
+        )}
 
         <p className="text-sm leading-relaxed text-white/80">
           {addon.description}

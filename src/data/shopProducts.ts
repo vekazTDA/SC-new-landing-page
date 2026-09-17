@@ -11,6 +11,9 @@ export type ShopProduct = {
   images: string[];
   modalDescription?: string;
   sizeOptions?: SizeOption[];
+  /** Per-product; falls back to SHOP_RATING when absent so the static seed keeps working. */
+  rating?: number;
+  reviewCount?: number;
 };
 
 const RATING = 4.9;

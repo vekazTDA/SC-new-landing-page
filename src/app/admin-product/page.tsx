@@ -5,6 +5,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { getAdminSession, getAuthUser } from "@/lib/admin/auth";
 import AdminShell from "./_components/AdminShell";
 import SetupNotice from "./_components/SetupNotice";
+import ReorderableList, { type ListRow } from "./_components/ReorderableList";
 import NoAccess from "./_components/NoAccess";
 import type { CatalogKind } from "@/lib/catalog/types";
 
@@ -98,41 +99,18 @@ export default async function AdminProductPage() {
               </p>
             )}
 
-            <ul className="mt-4 divide-y divide-white/10 overflow-hidden rounded-xl border border-white/10">
-              {group.rows.length === 0 && !group.error && (
-                <li className="p-5 text-sm text-white/45">
-                  Nothing here yet. Run the seed migration, or add one.
-                </li>
+            <ReorderableList
+              kind={group.kind}
+              rows={group.rows.map(
+                (row): ListRow => ({
+                  id: row.id,
+                  slug: row.slug,
+                  label: row.name ?? row.title ?? "Untitled",
+                  image: row.images?.[0]?.url ?? "",
+                  isPublished: row.is_published,
+                })
               )}
-              {group.rows.map((row) => (
-                <li key={row.id}>
-                  <Link
-                    href={`/admin-product/${group.kind}/${row.id}`}
-                    className="flex items-center gap-4 bg-white/[0.03] p-3 transition-colors hover:bg-white/[0.07]"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element -- arbitrary
-                        Storage or /public URLs; next/image adds no value at 48px here. */}
-                    <img
-                      src={row.images?.[0]?.url ?? ""}
-                      alt=""
-                      className="h-12 w-12 shrink-0 rounded-lg bg-black/40 object-cover"
-                    />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-semibold text-white">
-                        {row.name ?? row.title}
-                      </span>
-                      <span className="block truncate text-xs text-white/40">/{row.slug}</span>
-                    </span>
-                    {!row.is_published && (
-                      <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.1em] text-white/60">
-                        Draft
-                      </span>
-                    )}
-                    <span className="text-white/30">›</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            />
           </section>
         ))}
       </main>
