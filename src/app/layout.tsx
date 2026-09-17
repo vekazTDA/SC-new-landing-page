@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import {
+  Geist,
   Inter,
   Inter_Tight,
   Plus_Jakarta_Sans,
@@ -16,7 +17,13 @@ const inter = Inter({
 const interTight = Inter_Tight({
   variable: "--font-inter-tight",
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const geist = Geist({
+  variable: "--font-geist",
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 const redHatDisplay = Red_Hat_Display({
@@ -41,7 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${interTight.variable} ${redHatDisplay.variable} ${plusJakartaSans.variable} h-full scroll-smooth antialiased`}
+      className={`${inter.variable} ${interTight.variable} ${geist.variable} ${redHatDisplay.variable} ${plusJakartaSans.variable} h-full scroll-smooth antialiased`}
     >
       <head>
         <link

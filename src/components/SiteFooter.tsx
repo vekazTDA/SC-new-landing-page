@@ -5,9 +5,9 @@ import Image from "next/image";
 import { submitWeb3Form } from "@/lib/web3forms";
 
 const COMPANY_LINKS = [
-  { label: "Corporate Gifting", href: "#corporate-gifting" },
-  { label: "Contact", href: "#contact" },
-  { label: "Terms & Conditions", href: "#terms" },
+  { label: "Corporate Gifting", href: "/#corporate-gifting" },
+  { label: "Contact", href: "/#contact" },
+  { label: "Terms & Conditions", href: "/terms" },
 ];
 
 const SOCIAL_LINKS = [

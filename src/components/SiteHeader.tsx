@@ -2,16 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const NAV_LINKS = [
-  { label: "Corporate Gifting", href: "#corporate-gifting" },
-  { label: "Contact", href: "#contact" },
+  { label: "Corporate Gifting", href: "/#corporate-gifting" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 /** Mobile open menu link order. */
 const MENU_LINKS = [
-  { label: "Corporate Gift", href: "#corporate-gifting" },
-  { label: "Contact", href: "#contact" },
+  { label: "Corporate Gift", href: "/#corporate-gifting" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 /** Mobile open menu socials — only accounts that exist today. */
@@ -27,7 +28,12 @@ const PANEL =
 /** 30px padding + 25px logo + 30px padding, straight off the Figma node. */
 const BAR_HEIGHT = 85;
 
-export default function SiteHeader() {
+/**
+ * `solid` forces the opaque bar the landing page only shows once scrolled. Secondary
+ * pages sit on a light background, where the transparent state would leave the white
+ * nav labels and the logo invisible against it.
+ */
+export default function SiteHeader({ solid = false }: { solid?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
@@ -72,7 +78,7 @@ export default function SiteHeader() {
         // their top spacing off the published height.
         // 14px inset puts the panel at the Figma node's 374px inside the 402px frame.
         "fixed inset-x-0 top-0 z-40 px-[14px] pb-2 pt-3 transition-colors duration-300 sm:p-0 " +
-        (scrolled
+        (solid || scrolled
           ? "sm:border-b sm:border-white/10 sm:bg-[#241109]/85 sm:backdrop-blur-md"
           : "sm:border-b sm:border-transparent sm:bg-transparent")
       }
@@ -83,7 +89,7 @@ export default function SiteHeader() {
       <div className="relative sm:hidden" style={{ height: BAR_HEIGHT }}>
         <div className={`absolute inset-x-0 top-0 ${PANEL}`}>
           <div className="flex items-center justify-between px-[39px] py-[30px]">
-            <a href="#top" aria-label="Signature — home">
+            <Link href="/#top" aria-label="Signature — home">
               <Image
                 src="/images/logo.svg"
                 alt="Signature"
@@ -92,7 +98,7 @@ export default function SiteHeader() {
                 priority
                 className="h-[25px] w-auto"
               />
-            </a>
+            </Link>
 
             {/* Two 50x1 rules 13px apart, per the Figma node. The ::after grows the tap
                 target past 44px without adding height to the bar. The mock draws no
@@ -128,14 +134,14 @@ export default function SiteHeader() {
               ))}
             </ul>
 
-            <a
-              href="#shop"
+            <Link
+              href="/#shop"
               onClick={() => setMenuOpen(false)}
               className="mx-auto mt-8 flex h-[46px] w-[201px] items-center justify-center rounded-full bg-[#C5A880] text-[15px] text-white transition-opacity hover:opacity-90"
               style={{ fontFamily: "var(--font-ui)" }}
             >
               Shop Corporate Gifts
-            </a>
+            </Link>
 
             <ul
               className="mt-10 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[15px] text-[#C5A880]"
@@ -157,7 +163,7 @@ export default function SiteHeader() {
             </ul>
 
             <a
-              href="#terms"
+              href="/terms"
               onClick={() => setMenuOpen(false)}
               className="mt-4 block text-center text-[15px] text-[#C5A880] transition-opacity hover:opacity-70"
               style={{ fontFamily: "var(--font-ui)" }}
@@ -170,7 +176,7 @@ export default function SiteHeader() {
 
       {/* Tablet and up — unchanged */}
       <nav className="mx-auto hidden max-w-[1728px] flex-wrap items-center justify-between gap-x-6 gap-y-2 px-6 py-4 sm:flex sm:px-10 sm:py-5 lg:px-12 lg:py-6 2xl:px-14 2xl:py-8">
-        <a href="#top" aria-label="Signature — home">
+        <Link href="/#top" aria-label="Signature — home">
           <Image
             src="/images/logo.svg"
             alt="Signature"
@@ -179,7 +185,7 @@ export default function SiteHeader() {
             priority
             className="h-7 w-auto sm:h-8 lg:h-9 2xl:h-11"
           />
-        </a>
+        </Link>
         <ul className="flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.7rem] font-medium uppercase tracking-[0.2em] text-white sm:gap-x-6 sm:text-xs lg:gap-x-8 lg:text-sm 2xl:gap-x-12 2xl:text-xl">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
