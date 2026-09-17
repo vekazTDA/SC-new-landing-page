@@ -4,6 +4,7 @@ import ProductsSection from "@/components/ProductsSection";
 import AddonsSection from "@/components/AddonsSection";
 import BoxShowcaseSection from "@/components/BoxShowcaseSection";
 import ShopSection from "@/components/ShopSection";
+import SectionHandoff from "@/components/SectionHandoff";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import AppreciationSection from "@/components/AppreciationSection";
 import ContactSection from "@/components/ContactSection";
@@ -32,6 +33,8 @@ export default async function Home() {
         <BoxShowcaseSection />
         <ShopSection products={shopProducts} />
         <TestimonialsSection />
+        {/* dark -> cream happens here, after the cards, not inside their section */}
+        <SectionHandoff />
         <AppreciationSection />
         <ContactSection />
         <CtaBannerSection />

@@ -2,51 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Star } from "lucide-react";
-import SectionBlend from "./SectionBlend";
 import { TESTIMONIALS } from "@/data/testimonials";
-
-/**
- * The ramp out of this section, sampled so luminance follows a smootherstep rather than
- * the four straight segments it used to be — the old 50% stop changed slope tenfold in
- * one row, and that corner is what the eye reads as a band edge. Same endpoints, same
- * warm hues; only the sampling changed.
- *
- * Two of them because the section below changes with the breakpoint: AppreciationSection
- * (#EFE9E0) is lg:hidden, so from lg up it is ContactSection (#F2EDE5) that follows. One
- * ramp cannot land on both, and missing by 3-5 per channel leaves a dead-straight line
- * across flat cream.
- */
-const RAMP_TO_APPRECIATION = [
-  { at: "7.1%", color: "#251209" },
-  { at: "14.3%", color: "#2B160C" },
-  { at: "21.4%", color: "#381F13" },
-  { at: "28.6%", color: "#4B2E1E" },
-  { at: "35.7%", color: "#65432E" },
-  { at: "42.9%", color: "#7F5D47" },
-  { at: "50.0%", color: "#977A65" },
-  { at: "57.1%", color: "#B09782" },
-  { at: "64.3%", color: "#C6B2A0" },
-  { at: "71.4%", color: "#D7C9BA" },
-  { at: "78.6%", color: "#E3DACE" },
-  { at: "85.7%", color: "#EBE4DA" },
-  { at: "92.9%", color: "#EEE8DF" },
-];
-
-const RAMP_TO_CONTACT = [
-  { at: "7.1%", color: "#251209" },
-  { at: "14.3%", color: "#2B160C" },
-  { at: "21.4%", color: "#381F13" },
-  { at: "28.6%", color: "#4C2F1F" },
-  { at: "35.7%", color: "#67442F" },
-  { at: "42.9%", color: "#805F48" },
-  { at: "50.0%", color: "#997C67" },
-  { at: "57.1%", color: "#B29A85" },
-  { at: "64.3%", color: "#C8B5A3" },
-  { at: "71.4%", color: "#D9CCBE" },
-  { at: "78.6%", color: "#E6DDD3" },
-  { at: "85.7%", color: "#EEE8DF" },
-  { at: "92.9%", color: "#F1ECE4" },
-];
 
 const COLOR_DISABLED = "#4F2B1C";
 const COLOR_ACTIVE = "#9E9E9E";
@@ -148,28 +104,10 @@ export default function TestimonialsSection() {
       : COLOR_ACTIVE;
 
   return (
-    <section className="relative isolate flex min-h-0 flex-col justify-center overflow-hidden bg-[#241109] pb-36 lg:min-h-svh lg:pb-40">
-      {/* Near-black to cream is the biggest jump on the page, and an alpha fade through
-          it lands on grey — off-palette. This is an opaque ramp through the brand browns
-          instead.
-
-          The ramp must finish BELOW the cards. Sized against 142px of dead space at
-          1280x700 it ran 162px up behind them at 697px wide, washing the ground beside
-          the cards so they sat in a pool of light — the "shadow" this looked like was
-          the ramp itself, not a colour step. The section's bottom padding now reserves
-          more room than the ramp is tall, at every width. */}
-      <SectionBlend
-        to="#EFE9E0"
-        from="#241109"
-        via={RAMP_TO_APPRECIATION}
-        className="h-16 sm:h-48 lg:hidden"
-      />
-      <SectionBlend
-        to="#F2EDE5"
-        from="#241109"
-        via={RAMP_TO_CONTACT}
-        className="hidden lg:block lg:h-[260px]"
-      />
+    <section className="relative isolate flex min-h-0 flex-col justify-center overflow-hidden bg-[#241109] lg:min-h-svh">
+      {/* No transition here by design: this section is solid #241109 from edge to edge,
+          like the shop section above it. The hand-off to cream belongs to the section
+          that follows — a ramp inside this one shades the ground beside the cards. */}
 
       <div className="relative mx-auto w-full min-w-0 max-w-[1728px] px-6 pb-6 pt-[min(3.5rem,6svh)] sm:px-10 sm:pb-[min(4rem,7svh)] lg:px-12 lg:pb-[min(7rem,10svh)] 2xl:px-14">
         <h2
