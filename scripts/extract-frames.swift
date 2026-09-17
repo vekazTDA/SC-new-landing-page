@@ -1,19 +1,23 @@
 // Extracts a JPEG frame sequence from a video, for scroll-scrubbed playback on canvas.
 //
-//   swift scripts/extract-frames.swift <input.mp4> <outDir> <width> <count> <endSeconds> [quality]
+//   swift scripts/extract-frames.swift <input.mp4> <outDir> <width> <count> <endSeconds> [quality] [format]
 //
 // Example (desktop set used by BoxShowcaseSection):
 //   swift scripts/extract-frames.swift "~/Downloads/001 - HORZ.mp4" public/frames/box-horz 1440 120 7.8
 //
-// Frames are written as 0001.jpg … NNNN.jpg, evenly spaced over [0, endSeconds].
+// Frames are written as 0001.<ext> … NNNN.<ext>, evenly spaced over [0, endSeconds].
 // Seeks are exact (zero tolerance) so the sequence is free of duplicated frames.
+//
+// format is "jpg" (default) or "png". Use png when the frames are post-processed and
+// re-encoded afterwards — see scripts/build-frames.sh, which pipes png through
+// depill-frames.py into cwebp so the sequence is only ever lossily encoded once.
 
 import AVFoundation
 import AppKit
 
 let args = CommandLine.arguments
 guard args.count >= 6 else {
-    print("usage: extract-frames.swift <input> <outDir> <width> <count> <endSeconds> [quality]")
+    print("usage: extract-frames.swift <input> <outDir> <width> <count> <endSeconds> [quality] [format]")
     exit(1)
 }
 
@@ -23,6 +27,11 @@ let width = Double(args[3])!
 let count = Int(args[4])!
 let endSeconds = Double(args[5])!
 let quality = args.count > 6 ? Double(args[6])! : 0.6
+let format = args.count > 7 ? args[7].lowercased() : "jpg"
+guard format == "jpg" || format == "png" else {
+    print("format must be jpg or png, got \(format)")
+    exit(1)
+}
 
 let asset = AVURLAsset(url: URL(fileURLWithPath: inputPath))
 let duration = CMTimeGetSeconds(asset.duration)
@@ -54,11 +63,15 @@ for i in 0..<count {
     }
 
     let rep = NSBitmapImageRep(cgImage: image)
-    guard let data = rep.representation(
-        using: .jpeg, properties: [.compressionFactor: quality]
-    ) else { continue }
+    let data: Data?
+    if format == "png" {
+        data = rep.representation(using: .png, properties: [:])
+    } else {
+        data = rep.representation(using: .jpeg, properties: [.compressionFactor: quality])
+    }
+    guard let data else { continue }
 
-    let name = String(format: "%04d.jpg", i + 1)
+    let name = String(format: "%04d.\(format)", i + 1)
     try? data.write(to: URL(fileURLWithPath: outDir).appendingPathComponent(name))
     totalBytes += data.count
 

@@ -5,13 +5,11 @@ import Image from "next/image";
 
 const NAV_LINKS = [
   { label: "Corporate Gifting", href: "#corporate-gifting" },
-  { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
 
-/** The mock orders the open menu About first; the bar and desktop nav keep their order. */
+/** Mobile open menu link order. */
 const MENU_LINKS = [
-  { label: "About", href: "#about" },
   { label: "Corporate Gift", href: "#corporate-gifting" },
   { label: "Contact", href: "#contact" },
 ];
@@ -164,7 +162,7 @@ export default function SiteHeader() {
               className="mt-4 block text-center text-[15px] text-[#C5A880] transition-opacity hover:opacity-70"
               style={{ fontFamily: "var(--font-ui)" }}
             >
-              Terms &amp; Condition
+              Terms &amp; Conditions
             </a>
           </nav>
         </div>

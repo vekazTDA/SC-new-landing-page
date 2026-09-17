@@ -8,7 +8,7 @@ import { consumeInquiryPrefill } from "@/lib/inquiry";
 import { submitWeb3Form } from "@/lib/web3forms";
 
 const FIELD_CLASS =
-  "w-full border-0 border-b border-white/70 bg-transparent pb-2 font-[family-name:var(--font-ui)] text-base font-light text-white outline-none transition-colors placeholder:text-white/50 focus:border-white sm:text-lg";
+  "w-full min-w-0 max-w-full border-0 border-b border-white/70 bg-transparent pb-2 font-[family-name:var(--font-ui)] text-base font-light text-white outline-none transition-colors placeholder:text-white/50 focus:border-white sm:text-lg";
 
 const GIFT_OPTIONS = [
   "The Brew",
@@ -70,6 +70,17 @@ export default function ContactSection() {
   // of the CTA banner defocusing on its way out further down the page.
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Success state must stay sharp and in-column — blur expands paint bounds and
+    // can cover the neighbouring headline on desktop.
+    if (submitState === "success") {
+      const card = cardRef.current;
+      if (card) {
+        card.style.filter = "";
+        card.style.transform = "";
+        card.style.opacity = "";
+      }
+      return;
+    }
 
     let frame: number | null = null;
 
@@ -154,13 +165,13 @@ export default function ContactSection() {
       {/* Only 3-5 per channel into the CTA banner, but enough to read as a line. */}
       <SectionBlend to="#EFE9E0" className="h-12 sm:h-16" />
 
-      <div className="relative mx-auto grid max-w-[1728px] gap-10 px-6 pb-[min(2.5rem,4svh)] pt-[min(2.5rem,4svh)] sm:px-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:items-start lg:gap-12 lg:px-12 lg:pb-14 lg:pt-14 2xl:px-14">
-        <div className="max-w-xl">
+      <div className="relative mx-auto grid w-full min-w-0 max-w-[1728px] gap-10 px-6 pb-[min(2.5rem,4svh)] pt-[min(2.5rem,4svh)] sm:px-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:items-start lg:gap-16 lg:px-12 lg:pb-14 lg:pt-14 2xl:gap-20 2xl:px-14">
+        <div className="relative z-10 min-w-0 max-w-xl">
           <h2
             className="text-3xl leading-[1.35] text-[#281006] sm:text-[2rem] lg:text-[2.25rem] 2xl:text-[2.5rem]"
             style={{ fontFamily: "var(--font-serif-display)" }}
           >
-            <span className="block whitespace-nowrap max-[380px]:whitespace-normal">
+            <span className="block whitespace-normal sm:whitespace-nowrap">
               Tell Us What You&rsquo;re Thinking
             </span>
             <em className="block italic">And We Will Deliver.</em>
@@ -173,10 +184,15 @@ export default function ContactSection() {
         </div>
 
         {/* The halo hugs the card (Figma: 13px left, 12px up, ~30px larger, blur 38.8) */}
-        <div className="relative">
-          <div
+        <div
+          className={`relative z-0 min-w-0 w-full ${
+            submitState === "success" ? "overflow-hidden" : "lg:overflow-visible"
+          } overflow-hidden`}
+        >          <div
             aria-hidden="true"
-            className="pointer-events-none absolute -inset-x-3 -top-3 bottom-1 hidden rounded-2xl bg-[#A06B4A]/[0.33] blur-[39px] lg:block"
+            className={`pointer-events-none absolute -inset-x-3 -top-3 bottom-1 hidden rounded-2xl bg-[#A06B4A]/[0.33] blur-[39px] lg:block ${
+              submitState === "success" ? "lg:hidden" : ""
+            }`}
           />
 
           {submitState === "success" ? (
@@ -184,21 +200,21 @@ export default function ContactSection() {
               ref={cardRef}
               role="status"
               aria-live="polite"
-              className="relative flex min-h-[320px] flex-col items-center justify-center gap-4 rounded-2xl bg-[#A06B4A] px-6 py-[min(2rem,3.5svh)] text-center will-change-[filter,transform,opacity] sm:min-h-[400px] sm:px-10 sm:py-9 lg:px-14"
+              className="relative flex min-h-[320px] w-full min-w-0 flex-col items-center justify-center gap-4 overflow-hidden rounded-2xl bg-[#A06B4A] px-6 py-[min(2rem,3.5svh)] text-center sm:min-h-[400px] sm:px-10 sm:py-9 lg:px-14"
             >
               <CheckCircle2 className="h-12 w-12 text-[#F0DCC7]" aria-hidden="true" />
               <h3
                 className="text-2xl text-white sm:text-3xl"
                 style={{ fontFamily: "var(--font-serif-display)" }}
               >
-                Thank you!
+                Thank You!
               </h3>
               <p
                 className="max-w-md text-sm leading-relaxed text-[#F0DCC7] sm:text-base"
                 style={{ fontFamily: "var(--font-display-body)" }}
               >
-                Your inquiry has been received. A member of our team will follow
-                up personally to confirm the details.
+                We&rsquo;ve received your request and will be in touch shortly
+                to confirm the details.
               </p>
               <button
                 type="button"
@@ -209,10 +225,10 @@ export default function ContactSection() {
               </button>
             </div>
           ) : (
-            <div ref={cardRef} className="will-change-[filter,transform,opacity]">
+            <div ref={cardRef} className="w-full min-w-0 will-change-[filter,transform,opacity]">
             <form
               ref={formRef}
-              className="relative rounded-2xl bg-[#A06B4A] px-6 py-[min(2rem,3.5svh)] sm:px-10 sm:py-9 lg:px-14"
+              className="relative w-full min-w-0 rounded-2xl bg-[#A06B4A] px-6 py-[min(2rem,3.5svh)] sm:px-10 sm:py-9 lg:px-14"
               onSubmit={onSubmit}
             >
               <div className="flex flex-col gap-[min(1.5rem,2.6svh)]">

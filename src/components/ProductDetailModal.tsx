@@ -175,7 +175,7 @@ export default function ProductDetailModal({
                   Inquiry sent
                 </h2>
                 <p className="max-w-sm text-sm leading-relaxed text-[#76655A]">
-                  Thanks for your interest in {product.name}. Our team will
+                  Thank you for your interest in {product.name}. Our team will
                   follow up shortly to confirm details.
                 </p>
                 <button
@@ -194,10 +194,16 @@ export default function ProductDetailModal({
                       {product.eyebrow}
                     </span>
                     <span
-                      className="h-1 w-1 rounded-full bg-[#C59B78]"
+                      className={`h-1 w-1 rounded-full ${
+                        product.inStock ? "bg-[#1B7A5C]" : "bg-[#C59B78]"
+                      }`}
                       aria-hidden="true"
                     />
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[#C59B78]">
+                    <span
+                      className={`text-[11px] font-semibold uppercase tracking-[0.15em] ${
+                        product.inStock ? "text-[#1B7A5C]" : "text-[#C59B78]"
+                      }`}
+                    >
                       {product.inStock ? "In Stock" : "Out of Stock"}
                     </span>
                   </div>

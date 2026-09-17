@@ -80,7 +80,7 @@ export default function Hero() {
         >
           <p
             className="max-w-md text-center text-[14.42px] font-normal capitalize leading-[1.15] text-[#EFE9E0] sm:max-w-xl sm:text-xl lg:max-w-2xl lg:text-2xl 2xl:max-w-[1175px] 2xl:text-[2.391rem]"
-            style={{ fontFamily: "var(--font-serif-display)" }}
+            style={{ fontFamily: "var(--font-serif-display)", textShadow: "none" }}
           >
             Premium Corporate Gifts In Stunning, Customizable Packaging.
           </p>

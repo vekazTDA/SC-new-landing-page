@@ -13,13 +13,13 @@ export default function AddonCard({
 }) {
   return (
     <div className="group flex w-full flex-col overflow-hidden rounded-[20px] border border-[#C5A880]/40 bg-[#221712] shadow-[0px_16px_32px_0px_rgba(0,0,0,0.38)]">
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#140D0A] sm:aspect-[16/10]">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#1A100C] sm:aspect-[16/10]">
         <Image
           src={addon.image}
           alt={addon.title}
           fill
           sizes="(min-width: 1280px) 24vw, (min-width: 640px) 45vw, 100vw"
-          className="object-cover object-center"
+          className="object-cover object-center scale-[1.04]"
         />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,13,10,0)_65%,rgba(20,13,10,0.55)_100%)]" />
 

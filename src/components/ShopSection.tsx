@@ -24,7 +24,12 @@ const MIN_OPACITY = 0.65;
  */
 const SHARP_ZONE = 0.4;
 
-export default function ShopSection() {
+export default function ShopSection({
+  products = SHOP_PRODUCTS,
+}: {
+  /** Supplied by the server from Supabase; falls back to the bundled catalogue. */
+  products?: ShopProduct[];
+}) {
   const [selectedProduct, setSelectedProduct] = useState<ShopProduct | null>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -107,7 +112,7 @@ export default function ShopSection() {
         </h2>
 
         <div className="mt-10 grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-6 lg:mt-14 xl:grid-cols-4 xl:gap-x-8">
-          {SHOP_PRODUCTS.map((product, index) => (
+          {products.map((product, index) => (
             // The defocus lives on a wrapper rather than on the card: the card owns
             // `transform` for its hover scale, and a filter on it would clip the
             // "learn more" reveal into its own stacking context.

@@ -127,7 +127,7 @@ export default function TestimonialsSection() {
           className="text-center text-3xl text-[#FCD5AD] sm:text-4xl lg:text-[2.5rem]"
           style={{ fontFamily: "var(--font-serif-display)" }}
         >
-          What Our Client Says:
+          What Our Clients Say
         </h2>
 
         <div

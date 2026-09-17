@@ -49,7 +49,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           href="https://api.fontshare.com/v2/css?f[]=sentient@400,401&display=swap"
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      {/* Browser extensions (Grammarly, password managers) inject attributes onto
+          <body> before React hydrates — data-new-gr-c-s-check-loaded and
+          data-gr-ext-installed are Grammarly's. That trips the hydration mismatch
+          warning on a page we render identically on both sides. This suppresses it for
+          this element's own attributes only; it does not cascade to children, so a real
+          mismatch anywhere inside still reports. */}
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }

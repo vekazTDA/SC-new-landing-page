@@ -9,10 +9,11 @@ const FRAME_COUNT = 120;
 const BACKDROP = "#A5978C";
 
 /**
- * The extractor left a dark 1px column down each side of the landscape frames
- * (x0 is rgb(81,65,54) against rgb(175,161,152) two pixels in). Drawing from an
- * inset source rect drops it — otherwise it shows as a hairline at the section
- * edge, and the edge-stretch below smears it into a full band.
+ * The extractor leaves a dark 1px column down each side of the landscape frames — a
+ * property of the AVFoundation resample, not of the output width or codec: at 2048 wide
+ * x0 is still rgb(57,42,31) against rgb(173,159,148) one pixel in. Drawing from an inset
+ * source rect drops it — otherwise it shows as a hairline at the section edge, and the
+ * edge-stretch below smears it into a full band.
  */
 const INSET = 2;
 
@@ -37,23 +38,24 @@ const CALLOUTS = [
 ];
 
 /**
- * The bounding box of everything that actually matters in a frame — the box, the four
- * callouts and the CTA pill — measured from the busiest frame (0120) of each set.
- * Everything outside it is bare backdrop, which is what lets us crop to cover.
+ * The bounding box of everything that actually matters in a frame — the box and the four
+ * callouts — measured across every frame of each set. Everything outside it is bare
+ * backdrop, which is what lets us crop to cover.
+ *
+ * The bottoms used to be 0.925 / 0.841, which was the bottom edge of the "Explore Our
+ * Options" pill baked into the video. scripts/build-frames.sh erases that pill, so the
+ * lowest thing left is the dashed connector under the bottom-left callout, measured at
+ * 0.7828 (horz) and 0.7231 (vert). Keeping the old values would centre a box that is 14%
+ * dead space at the bottom, which pushed the whole composition upwards — 233px of empty
+ * backdrop below the content against 59px above it at 1920x1080.
  */
 const SAFE_BOX = {
-  horz: { left: 0.063, top: 0.237, right: 0.915, bottom: 0.925 },
-  vert: { left: 0.05, top: 0.129, right: 0.97, bottom: 0.841 },
-};
-
-/** Where the video's own "Explore Our Options" pill sits, as a fraction of the frame. */
-const CTA_BOX = {
-  horz: { top: 0.866, left: 0.5, width: 0.165, height: 0.06 },
-  vert: { top: 0.795, left: 0.5, width: 0.46, height: 0.055 },
+  horz: { left: 0.063, top: 0.237, right: 0.915, bottom: 0.785 },
+  vert: { left: 0.05, top: 0.129, right: 0.97, bottom: 0.725 },
 };
 
 const framePath = (set: "horz" | "vert", index: number) =>
-  `/frames/box-${set}/${String(index + 1).padStart(4, "0")}.jpg`;
+  `/frames/box-${set}/${String(index + 1).padStart(4, "0")}.webp`;
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
@@ -73,7 +75,6 @@ const readHeaderHeight = () => {
 export default function BoxShowcaseSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const linkRef = useRef<HTMLAnchorElement>(null);
   const framesRef = useRef<HTMLImageElement[]>([]);
   const drawnIndexRef = useRef(-1);
   const rafRef = useRef<number | null>(null);
@@ -81,9 +82,6 @@ export default function BoxShowcaseSection() {
   const [frameSet, setFrameSet] = useState<"horz" | "vert" | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [shouldLoad, setShouldLoad] = useState(false);
-  // which set finished loading — compared against frameSet so a set switch resets readiness
-  const [loadedSet, setLoadedSet] = useState<"horz" | "vert" | null>(null);
-  const ready = loadedSet !== null && loadedSet === frameSet;
 
   // Landscape frames on tablet and up, the portrait cut on phones.
   useEffect(() => {
@@ -183,7 +181,12 @@ export default function BoxShowcaseSection() {
         Math.max(height - drawHeight, 0)
       );
 
+      // Assigning canvas.width/height above resets every 2D context property — the
+      // transform, fillStyle and the smoothing settings included, and even a same-value
+      // assignment does it. So these are re-applied on every draw rather than once.
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = "high";
       context.fillStyle = BACKDROP;
       context.fillRect(0, 0, width, height);
 
@@ -218,16 +221,6 @@ export default function BoxShowcaseSection() {
         offsetX, offsetY, drawWidth, drawHeight
       );
       drawnIndexRef.current = index;
-
-      // The pill lives inside the frame, so track the drawn rect rather than the canvas.
-      const link = linkRef.current;
-      if (link) {
-        const box = CTA_BOX[frameSet ?? "horz"];
-        link.style.left = `${offsetX + box.left * drawWidth}px`;
-        link.style.top = `${offsetY + box.top * drawHeight}px`;
-        link.style.width = `${box.width * drawWidth}px`;
-        link.style.height = `${box.height * drawHeight}px`;
-      }
     },
     [frameSet]
   );
@@ -260,18 +253,15 @@ export default function BoxShowcaseSection() {
     drawnIndexRef.current = -1;
 
     const images: HTMLImageElement[] = [];
-    let loaded = 0;
 
     for (let i = 0; i < FRAME_COUNT; i += 1) {
       const image = new Image();
       image.src = framePath(frameSet, i);
       image.onload = () => {
         if (cancelled) return;
-        loaded += 1;
         // Repaint on arrival — after a set switch there may be no scroll event
         // to trigger one, which would leave the previous set's frame on screen.
         drawCurrent();
-        if (loaded === FRAME_COUNT) setLoadedSet(frameSet);
       };
       images[i] = image;
     }
@@ -325,19 +315,6 @@ export default function BoxShowcaseSection() {
           role="img"
           aria-label="A Signature gift box with callouts describing what makes the gifting service premium"
           className="h-full w-full"
-        />
-
-        {/* The pill in the video is only pixels — this gives it a real hit area.
-            Position is set in drawFrame, from the frame's drawn rect. */}
-        <a
-          ref={linkRef}
-          href="#contact"
-          aria-label="Explore our packaging options"
-          className="absolute -translate-x-1/2 rounded-full"
-          style={{
-            opacity: ready ? 1 : 0,
-            pointerEvents: ready ? "auto" : "none",
-          }}
         />
 
         <ul className="sr-only">

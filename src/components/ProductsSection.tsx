@@ -41,7 +41,12 @@ function InquiryCta() {
   );
 }
 
-export default function ProductsSection() {
+export default function ProductsSection({
+  products = PRODUCTS,
+}: {
+  /** Supplied by the server from Supabase; falls back to the bundled catalogue. */
+  products?: Product[];
+}) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const [revealed, setRevealed] = useState(false);
@@ -132,7 +137,7 @@ export default function ProductsSection() {
           ref={gridRef}
           className="mt-8 grid grid-cols-2 justify-items-center gap-3 sm:gap-8 xl:grid-cols-3 xl:gap-8"
         >
-          {PRODUCTS.map((product, index) => (
+          {products.map((product, index) => (
             // The reveal lives on a wrapper, not on the card: the card already owns
             // `transform` for its 150ms hover lift, and a 500ms entrance on the same
             // property would drag that out. `flex` keeps the card stretching to the

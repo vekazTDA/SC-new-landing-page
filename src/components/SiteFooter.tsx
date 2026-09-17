@@ -6,7 +6,6 @@ import { submitWeb3Form } from "@/lib/web3forms";
 
 const COMPANY_LINKS = [
   { label: "Corporate Gifting", href: "#corporate-gifting" },
-  { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
   { label: "Terms & Conditions", href: "#terms" },
 ];
@@ -83,7 +82,7 @@ export default function SiteFooter() {
                 className="mt-6 text-sm text-white/90"
                 style={{ fontFamily: "var(--font-ui)" }}
               >
-                Thanks for subscribing — you&rsquo;re on the list.
+                Thank you for subscribing.
               </p>
             ) : (
               // Desktop keeps the button tucked inside the pill. Mobile drops it out to a

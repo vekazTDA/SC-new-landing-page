@@ -9,17 +9,28 @@ import AppreciationSection from "@/components/AppreciationSection";
 import ContactSection from "@/components/ContactSection";
 import CtaBannerSection from "@/components/CtaBannerSection";
 import SiteFooter from "@/components/SiteFooter";
+import { getAddons, getProducts, getShopProducts } from "@/lib/catalog";
 
-export default function Home() {
+// Legal because cacheComponents is off. ISR means a build that fell back to the static
+// catalogue self-heals within the hour once Supabase comes online — no redeploy needed.
+export const revalidate = 3600;
+
+export default async function Home() {
+  const [products, shopProducts, addons] = await Promise.all([
+    getProducts(),
+    getShopProducts(),
+    getAddons(),
+  ]);
+
   return (
     <>
       <SiteHeader />
       <main className="flex flex-1 flex-col">
         <Hero />
-        <ProductsSection />
-        <AddonsSection />
+        <ProductsSection products={products} />
+        <AddonsSection addons={addons} />
         <BoxShowcaseSection />
-        <ShopSection />
+        <ShopSection products={shopProducts} />
         <TestimonialsSection />
         <AppreciationSection />
         <ContactSection />

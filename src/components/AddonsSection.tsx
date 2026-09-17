@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, NotebookPen } from "lucide-react";
 import AddonCard from "./AddonCard";
 import SectionBlend from "./SectionBlend";
-import { ADDONS } from "@/data/addons";
+import { ADDONS, type Addon } from "@/data/addons";
 import { submitWeb3Form } from "@/lib/web3forms";
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
@@ -14,7 +14,12 @@ const ENTER_BLUR = 26;
 const ENTER_SHIFT = 56;
 const ENTER_OPACITY = 0.55;
 
-export default function AddonsSection() {
+export default function AddonsSection({
+  addons = ADDONS,
+}: {
+  /** Supplied by the server from Supabase; falls back to the bundled catalogue. */
+  addons?: Addon[];
+}) {
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [noteOpen, setNoteOpen] = useState(false);
   const [note, setNote] = useState("");
@@ -86,7 +91,7 @@ export default function AddonsSection() {
     });
   };
 
-  const selectedAddons = ADDONS.filter((addon) => selected.has(addon.slug));
+  const selectedAddons = addons.filter((addon) => selected.has(addon.slug));
   const total = selectedAddons.reduce((sum, addon) => sum + addon.price, 0);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -164,7 +169,7 @@ export default function AddonsSection() {
         </h2>
 
         <div className="mt-[min(1.5rem,3svh)] grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4 lg:mt-8">
-          {ADDONS.map((addon) => (
+          {addons.map((addon) => (
             <AddonCard
               key={addon.slug}
               addon={addon}
@@ -220,7 +225,7 @@ export default function AddonsSection() {
 
             {submitState === "success" && (
               <p role="status" className="mt-2 text-sm text-[#C5A880]">
-                Order received — we&rsquo;ll follow up shortly.
+                Request Received - Our team will contact you and confirm details.
               </p>
             )}
             {submitState === "error" && (
