@@ -60,10 +60,17 @@ const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
 /**
- * Where the tail fade starts, as a fraction of the scrub, and the colour it lands on —
- * the shop section's own background, so the two meet with nothing left to hide.
+ * The track is split: frames play over the first SCRUB_END of it, then the last frame is
+ * held while the colour change runs over what is left.
+ *
+ * They have to be separate. The final callout ("Inclusive & Clean") is still drawing
+ * itself until frame 114 of 120 — progress 0.950, measured on both frame sets — so a
+ * fade keyed to frame index had to start after that, leaving 5% of the track to fade in.
+ * Splitting the phases lets the animation finish in full, hold a moment, and only then
+ * begin the hand-off, with a fifth of the track to do it in.
  */
-const TAIL_START = 0.82;
+const SCRUB_END = 0.8;
+/** The shop section's own background, so the two meet with nothing left to hide. */
 const TAIL_COLOUR = "#241109";
 
 /** Flat at both ends, so the fade has neither a visible start nor a visible finish. */
@@ -86,6 +93,7 @@ export default function BoxShowcaseSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const framesRef = useRef<HTMLImageElement[]>([]);
   const drawnIndexRef = useRef(-1);
+  const drawnTailRef = useRef(-1);
   const rafRef = useRef<number | null>(null);
 
   const [frameSet, setFrameSet] = useState<"horz" | "vert" | null>(null);
@@ -140,7 +148,7 @@ export default function BoxShowcaseSection() {
    * screen, filling the leftover with the frame's own edge pixels.
    */
   const drawFrame = useCallback(
-    (index: number) => {
+    (index: number, tail: number) => {
       const canvas = canvasRef.current;
       const image = framesRef.current[index];
       if (!canvas || !image?.complete || image.naturalWidth === 0) return;
@@ -237,22 +245,19 @@ export default function BoxShowcaseSection() {
       // frame instead moves with the canvas, so nothing slides; and because the tint is
       // flat rather than a ramp, there is no edge anywhere on screen to notice. By the
       // last frame the whole viewport is already the shop's colour.
-      // Skipped under reduced motion, which pins the final frame — it would render the
-      // section as a solid black rectangle.
-      if (!reducedMotion) {
-        const progress = index / (FRAME_COUNT - 1);
-        const tail = clamp((progress - TAIL_START) / (1 - TAIL_START), 0, 1);
-        if (tail > 0) {
-          context.globalAlpha = smootherstep(tail);
-          context.fillStyle = TAIL_COLOUR;
-          context.fillRect(0, 0, width, height);
-          context.globalAlpha = 1;
-        }
+      // The caller passes 0 under reduced motion, which pins the final frame and would
+      // otherwise render the section as a solid black rectangle.
+      if (tail > 0) {
+        context.globalAlpha = tail;
+        context.fillStyle = TAIL_COLOUR;
+        context.fillRect(0, 0, width, height);
+        context.globalAlpha = 1;
       }
 
       drawnIndexRef.current = index;
+      drawnTailRef.current = tail;
     },
-    [frameSet, reducedMotion]
+    [frameSet]
   );
 
   /** Work out which frame belongs at the current scroll position and paint it. */
@@ -261,17 +266,27 @@ export default function BoxShowcaseSection() {
     if (!section) return;
 
     let index = FRAME_COUNT - 1;
+    let tail = 0;
 
     if (!reducedMotion) {
       const rect = section.getBoundingClientRect();
       const travel = rect.height - window.innerHeight;
       const progress = travel > 0 ? -rect.top / travel : 0;
-      index = Math.round(clamp(progress, 0, 1) * (FRAME_COUNT - 1));
+
+      // Frames over the first SCRUB_END of the track, the hand-off over the rest.
+      index = Math.round(
+        clamp(progress / SCRUB_END, 0, 1) * (FRAME_COUNT - 1)
+      );
+      tail = smootherstep(
+        clamp((progress - SCRUB_END) / (1 - SCRUB_END), 0, 1)
+      );
     }
 
     // drawFrame bails if that frame hasn't downloaded yet, leaving drawnIndex
     // stale so a later call retries.
-    if (index !== drawnIndexRef.current) drawFrame(index);
+    if (index !== drawnIndexRef.current || Math.abs(tail - drawnTailRef.current) > 0.002) {
+      drawFrame(index, tail);
+    }
   }, [drawFrame, reducedMotion]);
 
   // Load the chosen frame set; repaint as frames arrive.
