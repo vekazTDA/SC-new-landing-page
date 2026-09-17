@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, NotebookPen } from "lucide-react";
 import AddonCard from "./AddonCard";
-import SectionBlend from "./SectionBlend";
 import { ADDONS, type Addon } from "@/data/addons";
 import { submitWeb3Form } from "@/lib/web3forms";
 
@@ -152,11 +151,17 @@ export default function AddonsSection({
   };
 
   return (
-    <section className="relative isolate flex min-h-svh flex-col justify-center overflow-hidden bg-[#A5968C]">
-      {/* Blends to the box showcase's canvas, not to its section background: the two
-          section colours are 1 apart, but the canvas backdrop that actually paints over
-          that section is ~#AEA096, so the visible step is ~10. */}
-      <SectionBlend to="#AEA096" className="h-16 sm:h-20 lg:h-24" />
+    <section className="relative isolate flex min-h-svh flex-col justify-center overflow-hidden bg-[#A5968C] pb-16 lg:pb-20">
+      {/* No blend into the box showcase below, and none is wanted: this section is
+          #A5968C and every frame of the showcase paints its backdrop at #A5978C — one
+          level apart. A ramp here only manufactures a seam, lifting the last strip ten
+          levels above both neighbours before the canvas steps straight back down.
+
+          The hard line at this boundary was never a colour change. The note card's
+          shadow (0 24px 48px, 50% black) reaches ~72px, `overflow-hidden` clips at the
+          section edge, and the card sat 31px above it — so 41px of the falloff was cut
+          off flat. The bottom padding below gives the shadow room to finish inside the
+          section; without it, no gradient on earth hides a sliced shadow. */}
 
       <div className="relative mx-auto max-w-[1728px] px-6 pb-[min(2.5rem,4svh)] pt-[min(2.5rem,4svh)] sm:px-10 lg:px-12 lg:pb-[min(3rem,5svh)] lg:pt-[min(3rem,5svh)] 2xl:px-14">
         <h2
