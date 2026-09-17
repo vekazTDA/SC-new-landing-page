@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import SectionBlend from "./SectionBlend";
 
 const FRAME_COUNT = 120;
 
@@ -59,6 +58,16 @@ const framePath = (set: "horz" | "vert", index: number) =>
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
+
+/**
+ * Where the tail fade starts, as a fraction of the scrub, and the colour it lands on —
+ * the shop section's own background, so the two meet with nothing left to hide.
+ */
+const TAIL_START = 0.82;
+const TAIL_COLOUR = "#241109";
+
+/** Flat at both ends, so the fade has neither a visible start nor a visible finish. */
+const smootherstep = (u: number) => u * u * u * (u * (u * 6 - 15) + 10);
 
 /**
  * The fixed header sits over this section, so the top callout has to clear it.
@@ -220,9 +229,30 @@ export default function BoxShowcaseSection() {
         image, INSET, INSET, srcWidth, srcHeight,
         offsetX, offsetY, drawWidth, drawHeight
       );
+
+      // The shop section below is near-black. A gradient band at the section's bottom
+      // edge cannot solve that seam: the band sits on the 250svh track while the canvas
+      // is pinned, so it slides *across* a stationary image, which is read as a shadow
+      // wiping over the box — and the taller the band, the longer the wipe. Tinting the
+      // frame instead moves with the canvas, so nothing slides; and because the tint is
+      // flat rather than a ramp, there is no edge anywhere on screen to notice. By the
+      // last frame the whole viewport is already the shop's colour.
+      // Skipped under reduced motion, which pins the final frame — it would render the
+      // section as a solid black rectangle.
+      if (!reducedMotion) {
+        const progress = index / (FRAME_COUNT - 1);
+        const tail = clamp((progress - TAIL_START) / (1 - TAIL_START), 0, 1);
+        if (tail > 0) {
+          context.globalAlpha = smootherstep(tail);
+          context.fillStyle = TAIL_COLOUR;
+          context.fillRect(0, 0, width, height);
+          context.globalAlpha = 1;
+        }
+      }
+
       drawnIndexRef.current = index;
     },
-    [frameSet]
+    [frameSet, reducedMotion]
   );
 
   /** Work out which frame belongs at the current scroll position and paint it. */
@@ -307,8 +337,9 @@ export default function BoxShowcaseSection() {
         "relative bg-[#A5978C] " + (reducedMotion ? "h-svh" : "h-[250svh]")
       }
     >
-      {/* sticky is itself a positioned ancestor, so the CTA hit area below anchors to
-          this viewport-sized box rather than to the 250svh scroll track. */}
+      {/* The handoff into the shop section is painted into the frame itself (see the
+          tail fade in drawFrame), not laid over this track — anything positioned on the
+          250svh track slides across the pinned canvas as you scroll. */}
       <div className="sticky top-0 h-svh overflow-hidden">
         <canvas
           ref={canvasRef}
@@ -325,20 +356,6 @@ export default function BoxShowcaseSection() {
           ))}
         </ul>
       </div>
-
-      {/* Runs the showcase into the near-black shop section. It sits outside the sticky
-          box — and after it, so it paints over the canvas — because it belongs to the end
-          of the 250svh track, not to the viewport the canvas is pinned to. At that point
-          the canvas is bottom-aligned with the section and its last ~200px are flat
-          backdrop (row stddev 0.4-1.2; content only starts around 240px), so nothing is
-          covered. A plain alpha ramp is enough here: both ends are warm (#AEA096 and
-          #241109 sit at r-b 24 and 27), so the fade stays brown instead of going grey the
-          way the near-black to cream one did. */}
-      <SectionBlend
-        to="#241109"
-        mid={{ at: "45%", alpha: 0.12 }}
-        className="h-48 sm:h-64 lg:h-[320px]"
-      />
     </section>
   );
 }
